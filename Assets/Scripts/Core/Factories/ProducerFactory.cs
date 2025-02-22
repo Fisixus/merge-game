@@ -1,18 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
+using Core.Factories.Interface;
+using Core.Factories.Pools;
+using Core.GridPawns;
+using Core.GridPawns.Enum;
 using UnityEngine;
 
-public class ProducerFactory : MonoBehaviour
+namespace Core.Factories
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ProducerFactory : ObjectFactory<Producer>, IProducerFactory
     {
-        
-    }
+    
+        [field: SerializeField]
+        [SerializedDictionary("Producer Type", "Producer Data")]
+        public SerializedDictionary<ProducerType, ProducerDataSO> ProducerDataDict { get; private set; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override void PreInitialize()
+        {
+            Pool = new ObjectPool<Producer>(ObjPrefab, ParentTr, 8);
+        }
+    
+        public Producer GenerateProducer(ProducerType producerType, int producerLevel, Vector2Int producerCoordinate)
+        {
+            var item = CreateObj();
+            item.SetAttributes(producerCoordinate, producerType, producerLevel);
+            item.ApplyData(ProducerDataDict[producerType].ProducerLevelDataDict[producerLevel]);
+            return item;
+        }
+
     }
 }

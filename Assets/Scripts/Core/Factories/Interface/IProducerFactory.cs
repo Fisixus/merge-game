@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
+using Core.GridPawns;
+using Core.GridPawns.Enum;
 using UnityEngine;
 
-public class IProducerFactory : MonoBehaviour
+namespace Core.Factories.Interface
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IProducerFactory : IFactory<Producer>
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        SerializedDictionary<ProducerType, ProducerDataSO> ProducerDataDict { get; }
+        Producer GenerateProducer(ProducerType producerType ,int producerLevel, Vector2Int producerCoordinate);
     }
 }

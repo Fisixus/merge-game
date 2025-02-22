@@ -1,18 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Core.GridPawns.Data;
+using Core.GridPawns.Enum;
 using UnityEngine;
 
-public class Producer : MonoBehaviour
+namespace Core.GridPawns
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Producer : GridPawn
     {
-        
-    }
+        [field: SerializeField] public ProducerType ProducerType { get; set; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override System.Enum Type
+        {
+            get => ProducerType;
+            protected set => ProducerType = (ProducerType)value;
+        }
+
+        public override void ApplyData(GridPawnLevelDataSO levelData)
+        {
+            base.ApplyData(levelData);
+            var producerData = levelData as ProducerLevelDataSO;
+            if (producerData is null)
+            {
+                throw new InvalidOperationException("Invalid data type provided!");
+            }
+
+            SpriteRenderer.sprite = producerData.ProducerSprite;
+            //TODO: Get other things too
+        }
+
+        public override string ToString()
+        {
+            return $"Column{Coordinate.x},Row{Coordinate.y}, Level:{Level}, Type:{ProducerType}";
+        }
     }
 }
