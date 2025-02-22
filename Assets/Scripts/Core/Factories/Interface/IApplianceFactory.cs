@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
+using Core.Factories.Interface;
+using Core.GridPawns;
+using Core.GridPawns.Enum;
+using UnityEditor;
 using UnityEngine;
 
-public class IApplianceFactory : MonoBehaviour
+public interface IApplianceFactory : IFactory<Appliance>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    SerializedDictionary<ApplianceType, ApplianceDataSO> ApplianceDataDict { get; }
+    Appliance GenerateAppliance(ApplianceType applianceType ,int applianceLevel, Vector2Int applianceCoordinate);
 }

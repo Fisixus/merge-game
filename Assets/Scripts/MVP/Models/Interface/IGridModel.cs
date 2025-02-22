@@ -1,18 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Core.GridPawns;
 
-public class IGridModel : MonoBehaviour
+namespace MVP.Models.Interface
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IGridModel
     {
-        
-    }
+        GridPawn[,] Grid { get; } // x:column, y:row
+        int ColumnCount { get; }
+        int RowCount { get; }
+        void Initialize(List<GridPawn> gridObjs, int columns, int rows);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
