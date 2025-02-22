@@ -132,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 120978050}
+  - component: {fileID: 120978051}
   m_Layer: 0
   m_Name: GridView
   m_TagString: Untagged
@@ -154,6 +155,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 752730640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &120978051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120978049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49e04dc5f5bd1ed43a9cc3da4504af3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <GridSprite>k__BackingField: {fileID: 946274741}
+  <GridTopLeftTr>k__BackingField: {fileID: 982629523}
+  <CellSize>k__BackingField: {x: 1, y: 1}
+  <GridTopLeftMargin>k__BackingField: {x: -0.38, y: -0.76}
+  <GridPadding>k__BackingField: {x: 0.25, y: 0.4}
+  <Cam>k__BackingField: {fileID: 519420031}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,7 +609,7 @@ GameObject:
   m_Component:
   - component: {fileID: 982629523}
   m_Layer: 0
-  m_Name: Top
+  m_Name: TopLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

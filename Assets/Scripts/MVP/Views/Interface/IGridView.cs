@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class IGridView : MonoBehaviour
+namespace MVP.Views.Interface
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IGridView
     {
-        
-    }
+        SpriteRenderer GridSprite { get; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Transform GridTopLeftTr { get; }
+
+        Vector2 CellSize { get; }
+
+        Vector2 GridTopLeftMargin { get; }
+
+        Vector2 GridPadding { get; }
+
+        void CalculateGridSize(Vector2Int gridSize);
+
+        void Scale(Vector2Int gridSize);
     }
 }
