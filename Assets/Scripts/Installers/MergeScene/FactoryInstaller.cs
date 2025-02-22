@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
+using Core.Factories;
+using Core.Factories.Interface;
+using DI;
 using UnityEngine;
 
-public class FactoryInstaller : MonoBehaviour
+namespace Installers.LevelScene
 {
-    // Start is called before the first frame update
-    void Start()
+    public class FactoryInstaller : Installer
     {
-        
-    }
+        // Reference to the scene object
+        [SerializeField] private ApplianceFactory _applianceFactory;
+        [SerializeField] private ProducerFactory _producerFactory;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void InstallBindings()
+        {
+            Container.BindAsSingle<IApplianceFactory>(() => _applianceFactory);
+            Container.BindAsSingle<IProducerFactory>(() => _producerFactory);
+        }
     }
 }

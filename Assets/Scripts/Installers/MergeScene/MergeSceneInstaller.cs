@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
+using DI;
+using Installers.LevelScene;
 using UnityEngine;
 
-public class MergeSceneInstaller : MonoBehaviour
+namespace Installers.MergeScene
 {
-    // Start is called before the first frame update
-    void Start()
+    public class LevelSceneInstaller : Installer
     {
-        
-    }
+        [SerializeField] private HandlerInstaller _handlerInstaller;
+        [SerializeField] private MVPMergeInstaller _mvpMergeInstaller;
+        [SerializeField] private FactoryInstaller _factoryInstaller;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void InstallBindings()
+        {
+            _factoryInstaller.Install(Container);
+            _handlerInstaller.Install(Container);
+            _mvpMergeInstaller.Install(Container);
+        }
     }
 }

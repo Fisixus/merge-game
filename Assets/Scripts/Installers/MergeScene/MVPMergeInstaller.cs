@@ -1,18 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
+using DI;
+using MVP.Models;
+using MVP.Models.Interface;
+using MVP.Presenters;
+using MVP.Views;
+using MVP.Views.Interface;
 using UnityEngine;
 
-public class MVPMergeInstaller : MonoBehaviour
+namespace Installers.MergeScene
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MVPMergeInstaller : Installer
     {
-        
-    }
+        [SerializeField] private GridView _gridView;
+        [SerializeField] private MergeUIView _mergeUIView;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void InstallBindings()
+        {
+            Container.BindAsSingle<IGridModel>(() => Container.Construct<GridModel>());
+            Container.BindAsSingle<ITaskModel>(() => Container.Construct<TaskModel>());
+            Container.BindAsSingle<IGridView>(() => _gridView);
+            Container.BindAsSingle<IMergeUIView>(() => _mergeUIView);
+            
+            Container.BindAsSingleNonLazy(() => Container.Construct<GridPresenter>());
+            Container.BindAsSingleNonLazy(() => Container.Construct<MergePresenter>());
+        }
     }
 }

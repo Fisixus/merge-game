@@ -1,18 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.UI;
 
-public class IMainUIView : MonoBehaviour
+namespace MVP.Views.Interface
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IMainUIView
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Button PlayButton { get; }
     }
 }

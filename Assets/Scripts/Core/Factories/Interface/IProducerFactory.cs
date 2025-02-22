@@ -9,5 +9,6 @@ namespace Core.Factories.Interface
     {
         SerializedDictionary<ProducerType, ProducerDataSO> ProducerDataDict { get; }
         Producer GenerateProducer(ProducerType producerType ,int producerLevel, Vector2Int producerCoordinate);
+        void DestroyAllProducers();
     }
 }

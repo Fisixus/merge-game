@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class IMergeUIView : MonoBehaviour
+namespace MVP.Views.Interface
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IMergeUIView
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    
     }
 }

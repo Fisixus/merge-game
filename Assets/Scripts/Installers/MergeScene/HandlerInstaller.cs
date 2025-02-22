@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using DI;
+using MVP.Presenters.Handlers;
 
-public class HandlerInstaller : MonoBehaviour
+namespace Installers.LevelScene
 {
-    // Start is called before the first frame update
-    void Start()
+    public class HandlerInstaller : Installer
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void InstallBindings()
+        {
+            Container.BindAsSingle(() => Container.Construct<GridPawnFactoryHandler>());
+        }
     }
 }

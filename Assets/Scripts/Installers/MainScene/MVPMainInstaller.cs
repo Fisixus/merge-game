@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+using DI;
+using MVP.Views;
+using MVP.Views.Interface;
 using UnityEngine;
 
-public class MVPMainInstaller : MonoBehaviour
+namespace Installers.MainScene
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MVPMainInstaller : Installer
     {
-        
-    }
+        [SerializeField] private MainUIView _mainUIView;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void InstallBindings()
+        {
+            Container.BindAsSingle<IMainUIView>(() => _mainUIView);
+        }
     }
 }

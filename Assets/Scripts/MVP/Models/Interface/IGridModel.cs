@@ -8,7 +8,8 @@ namespace MVP.Models.Interface
         GridPawn[,] Grid { get; } // x:column, y:row
         int ColumnCount { get; }
         int RowCount { get; }
-        void Initialize(List<GridPawn> gridObjs, int columns, int rows);
+        void LoadGrid();
+        void SaveGrid();
 
     }
 }

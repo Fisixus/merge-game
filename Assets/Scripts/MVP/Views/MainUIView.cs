@@ -1,18 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using System.Text;
+using Cysharp.Threading.Tasks;
+using DI.Contexts;
+using MVP.Presenters;
+using MVP.Presenters.Handlers;
+using MVP.Views.Interface;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class MainUIView : MonoBehaviour
+namespace MVP.Views
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MainUIView : MonoBehaviour, IMainUIView
     {
-        
-    }
+        [field: SerializeField] public Button PlayButton { get; private set; }
 
-    // Update is called once per frame
-    void Update()
-    {
+        private void Awake()
+        {
+            PlayButton.onClick.AddListener(() => { RequestLevel().Forget(); });
+        }
+
+        private void OnDisable()
+        {
+            PlayButton.onClick.RemoveAllListeners();
+        }
+
+        private async UniTask RequestLevel()
+        {
+            try
+            {
+                // Disable the button to prevent multiple clicks
+                PlayButton.interactable = false;
+
+                // Resolve dependencies
+                var scenePresenter = ProjectContext.Container.Resolve<ScenePresenter>();
+                var mergeTransitionHandler = ProjectContext.Container.Resolve<SceneTransitionHandler>();
+                // Perform scene transition
+                await scenePresenter.TransitionToNextScene("MergeScene",
+                    async (container) =>
+                    {
+                        // Specific setup logic for this scene
+                        await mergeTransitionHandler.SetupMergeSceneRequirements(container);
+                    });
+            }
+            catch (Exception e)
+            {
+                throw new Exception();
+            }
+        }
         
     }
 }

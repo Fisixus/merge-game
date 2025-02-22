@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using DI;
+using MVP.Presenters;
+using MVP.Presenters.Handlers;
 
-public class MVPProjectInstaller : MonoBehaviour
+namespace Installers
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MVPProjectInstaller : Installer
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void InstallBindings()
+        {
+            Container.BindAsSingle(() => Container.Construct<ScenePresenter>());
+            Container.BindAsSingle(() => Container.Construct<SceneTransitionHandler>());
+            Container.BindAsSingleNonLazy(() => Container.Construct<GamePresenter>());
+        }
     }
 }
