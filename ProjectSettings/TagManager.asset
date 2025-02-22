@@ -43,6 +43,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Grid
+    uniqueID: 2580889917
+    locked: 0
+  - name: Pawns
+    uniqueID: 1000532377
+    locked: 0
+  - name: Particles
+    uniqueID: 2959877425
+    locked: 0
   - name: UI
     uniqueID: 1987324651
+    locked: 0
+  - name: LoadScreen
+    uniqueID: 1592143165
     locked: 0
