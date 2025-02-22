@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GridPawnWidthHeight>k__BackingField: {x: 1.15, y: 1.15}
   <ProducerSprite>k__BackingField: {fileID: 21300000, guid: ae3ae8c9881e7fe459fa4c0b4d6a7ed7, type: 3}
+  <Capacity>k__BackingField: 10
   <GeneratedApplianceType>k__BackingField: 1
   <GeneratingRatioDict>k__BackingField:
     _serializedList:

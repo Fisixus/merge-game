@@ -102,9 +102,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BoxCollider>k__BackingField: {fileID: 2046329324661095570}
   <SpriteRenderer>k__BackingField: {fileID: 4884900453470577241}
+  <FocusSprite>k__BackingField: {fileID: 4053926137478503096}
   <Coordinate>k__BackingField: {x: 0, y: 0}
   <Level>k__BackingField: 0
+  <CapacitySprite>k__BackingField: {fileID: 9206096985907540504}
   <ProducerType>k__BackingField: 0
+  <Capacity>k__BackingField: 0
+  <GeneratedApplianceType>k__BackingField: 0
 --- !u!61 &2046329324661095570
 BoxCollider2D:
   m_ObjectHideFlags: 0
