@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Core.GridPawns;
+using Core.GridSerialization;
 
 namespace MVP.Models.Interface
 {
@@ -8,8 +10,10 @@ namespace MVP.Models.Interface
         GridPawn[,] Grid { get; } // x:column, y:row
         int ColumnCount { get; }
         int RowCount { get; }
-        void LoadGrid();
+        GridInfo GetGridInfo();
+        void LoadGrid(GridInfo gridInfo);
         void SaveGrid();
+        event Action<GridPawn> OnGridPawnInitializedEvent;
 
     }
 }

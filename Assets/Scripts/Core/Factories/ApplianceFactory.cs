@@ -24,11 +24,22 @@ namespace Core.Factories
     
         public Appliance GenerateAppliance(ApplianceType applianceType, int applianceLevel, Vector2Int applianceCoordinate)
         {
-            var item = CreateObj();
-            item.SetAttributes(applianceCoordinate, applianceType, applianceLevel);
-            item.ApplyData(ApplianceDataDict[applianceType].ApplianceLevelDataDict[applianceLevel]);
-            return item;
+            var appliance = CreateObj();
+            appliance.SetAttributes(applianceCoordinate, applianceType, applianceLevel);
+
+            if (ApplianceDataDict.TryGetValue(applianceType, out var applianceData) &&
+                applianceData.ApplianceLevelDataDict.TryGetValue(applianceLevel, out var levelData))
+            {
+                appliance.ApplyData(levelData);
+            }
+            else
+            {
+                DestroyObj(appliance);
+            }
+
+            return appliance;
         }
+
         
         public override Appliance CreateObj()
         {

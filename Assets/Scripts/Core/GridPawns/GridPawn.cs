@@ -1,5 +1,6 @@
 using Core.GridPawns.Enum;
 using Core.GridPawns.Interface;
+using Core.Helpers;
 using DG.Tweening;
 using UnityEngine;
 
@@ -37,13 +38,34 @@ namespace Core.GridPawns
 
         private bool _isEmpty;
         
+        public void SetWorldPosition(Vector2 longestCell, Transform gridTopLeftTr, Vector2Int? coordinateOverride = null)
+        {
+            // Use the provided override coordinate or default to the current coordinate
+            var targetCoordinate = coordinateOverride ?? Coordinate;
+
+            // Calculate the world position
+            var position = CalculateWorldPosition(longestCell, gridTopLeftTr, targetCoordinate);
+            transform.position = position;
+        }
+
+        // Helper Method for Position Calculation
+        private Vector3 CalculateWorldPosition(Vector2 longestCell, Transform gridTopLeftTr,
+            Vector2Int targetCoordinate)
+        {
+            var gridTr = gridTopLeftTr.parent;
+            var scaleNormalizing = gridTr.localScale.x;
+
+            return GridPositionHelper.CalculateItemWorldPosition(gridTopLeftTr.position, longestCell, targetCoordinate,
+                scaleNormalizing);
+        }
+        
 
         // SetAttributes, leveraging IType and polymorphism
         public void SetAttributes(Vector2Int newCoord, System.Enum type, int level)
         {
             Coordinate = newCoord;
             Type = type;
-            Level = Level;
+            Level = level;
             name = ToString();
             SetSortingOrder(-newCoord.y);
 

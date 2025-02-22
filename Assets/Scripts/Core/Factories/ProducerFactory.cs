@@ -25,11 +25,22 @@ namespace Core.Factories
     
         public Producer GenerateProducer(ProducerType producerType, int producerLevel, Vector2Int producerCoordinate)
         {
-            var item = CreateObj();
-            item.SetAttributes(producerCoordinate, producerType, producerLevel);
-            item.ApplyData(ProducerDataDict[producerType].ProducerLevelDataDict[producerLevel]);
-            return item;
+            var producer = CreateObj();
+            producer.SetAttributes(producerCoordinate, producerType, producerLevel);
+
+            if (ProducerDataDict.TryGetValue(producerType, out var producerData) &&
+                producerData.ProducerLevelDataDict.TryGetValue(producerLevel, out var levelData))
+            {
+                producer.ApplyData(levelData);
+            }
+            else
+            {
+                DestroyObj(producer);
+            }
+
+            return producer;
         }
+
         
         public override Producer CreateObj()
         {

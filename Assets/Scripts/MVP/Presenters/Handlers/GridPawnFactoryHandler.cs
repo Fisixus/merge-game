@@ -39,6 +39,7 @@ namespace MVP.Presenters.Handlers
             }
         }
         
+        
         public void DestroyAllGridPawns()
         {
             _applianceFactory.DestroyAllAppliances();

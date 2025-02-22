@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb463415cf1c66c4f86e9ffe22dc8276, type: 3}
   m_Name: 8
   m_EditorClassIdentifier: 
-  <GridPawnWidthHeight>k__BackingField: {x: 1, y: 1}
+  <GridPawnWidthHeight>k__BackingField: {x: 1.15, y: 1.15}
   <ApplianceSprite>k__BackingField: {fileID: 21300000, guid: 9de184e9c30cae047972e2133079eaec, type: 3}
