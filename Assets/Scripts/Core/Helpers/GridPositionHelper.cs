@@ -7,7 +7,7 @@ namespace Core.Helpers
     public static class GridPositionHelper
     {
         private static readonly Dictionary<Vector2Int, Vector3> CoordinateToWorldPosDict = new();
-        private const float MaxDistanceThreshold = 0.5f; // Adjust as needed
+        private const float MaxDistanceThreshold = 1f; // Adjust as needed
 
         public static Vector3 CalculateItemWorldPosition(Vector3 gridTopLeftPosition, Vector2 longestCell,
             Vector2Int coordinate, float scaleFactor)
@@ -29,10 +29,23 @@ namespace Core.Helpers
             return worldPosition;
         }
 
+        public static Vector3 GetWorldPositionFromCoordinate(Vector2Int coordinate)
+        {
+            if (CoordinateToWorldPosDict.TryGetValue(coordinate, out Vector3 cachedPosition))
+            {
+                return cachedPosition;
+            }
+            else
+            {
+                Debug.LogError("Location dictionary has not filled yet it should have been before!");
+                return Vector3.negativeInfinity;
+            }
+        }
+
         /// <summary>
         /// Finds the closest grid coordinate to the given release point if within a certain distance.
         /// </summary>
-        public static Vector2Int? FindClosestCell(Vector3 releasePoint)
+        public static Vector2Int? FindClosestCoordinateAfterRelease(Vector3 releasePoint)
         {
             Vector2Int? closestCoord = null;
             float minDistance = MaxDistanceThreshold; // Start with threshold
@@ -40,6 +53,7 @@ namespace Core.Helpers
             foreach (var kvp in CoordinateToWorldPosDict)
             {
                 float distance = Vector3.Distance(kvp.Value, releasePoint);
+                //Debug.Log(distance);
                 if (distance < minDistance)
                 {
                     minDistance = distance;

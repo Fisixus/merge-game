@@ -51,7 +51,7 @@ namespace Core.Factories
         public override void DestroyObj(Appliance emptyItem)
         {
             base.DestroyObj(emptyItem);
-            emptyItem.SetAttributes(-Vector2Int.one, ApplianceType.None, 0);
+            emptyItem.SetAttributes(emptyItem.Coordinate, ApplianceType.None, 0);//TODO:
             _allAppliances.Remove(emptyItem);
         }
 

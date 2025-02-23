@@ -117,6 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BoxCollider>k__BackingField: {fileID: 2046329324661095570}
   <SpriteRenderer>k__BackingField: {fileID: 4884900453470577241}
+  <PawnEffect>k__BackingField: {fileID: 7136932475239454457}
   <Coordinate>k__BackingField: {x: 0, y: 0}
   <Level>k__BackingField: 0
   <CapacitySprite>k__BackingField: {fileID: 9206096985907540504}

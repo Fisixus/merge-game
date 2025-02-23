@@ -12,6 +12,7 @@ namespace Core.GridPawns
     {
         [field: SerializeField] public BoxCollider2D BoxCollider { get; private set; }
         [field: SerializeField] public SpriteRenderer SpriteRenderer { get; private set; }
+        [field: SerializeField] public GridPawnEffect PawnEffect { get; private set; }
         [field: SerializeField] public Vector2Int Coordinate { get; set; }
         
         [field: SerializeField] public int Level { get;  set; }
@@ -39,18 +40,31 @@ namespace Core.GridPawns
         }
 
         private bool _isEmpty;
-        private GridPawnEffect _gridPawnEffect;
 
-        private void Awake()
+        public void SetWorldPosition(Vector3 worldPos, bool isAnimOn = false, float animTime = 0.3f)
         {
-            _gridPawnEffect = GetComponent<GridPawnEffect>();
+            // Apply the position with or without animation
+            if (isAnimOn)
+            {
+                int sortingOrder = SpriteRenderer.sortingOrder;
+                SetSortingOrder(1000);
+                BoxCollider.enabled = false;
+                PawnEffect.Shift(worldPos, ()=>
+                {
+                    BoxCollider.enabled = true;
+                    SetSortingOrder(sortingOrder);
+                }, animTime);
+            }
+            else
+            {
+                transform.position = worldPos;
+            }
         }
 
         public void SetWorldPosition(Vector2 longestCell, Transform gridTopLeftTr, Vector2Int? coordinateOverride = null, bool isAnimOn = false, float animTime = 0.3f)
         {
             // Use the provided override coordinate or default to the current coordinate
             var targetCoordinate = coordinateOverride ?? Coordinate;
-
             // Calculate the world position
             var position = CalculateWorldPosition(longestCell, gridTopLeftTr, targetCoordinate);
             
@@ -60,7 +74,7 @@ namespace Core.GridPawns
                 int sortingOrder = SpriteRenderer.sortingOrder;
                 SetSortingOrder(1000);
                 BoxCollider.enabled = false;
-                _gridPawnEffect.Shift(position, ()=>
+                PawnEffect.Shift(position, ()=>
                 {
                     BoxCollider.enabled = true;
                     SetSortingOrder(sortingOrder);

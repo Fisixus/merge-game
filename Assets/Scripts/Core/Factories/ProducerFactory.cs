@@ -52,7 +52,7 @@ namespace Core.Factories
         public override void DestroyObj(Producer emptyItem)
         {
             base.DestroyObj(emptyItem);
-            emptyItem.SetAttributes(-Vector2Int.one, ProducerType.None, 0);
+            emptyItem.SetAttributes(emptyItem.Coordinate, ProducerType.None, 0);
             _allProducers.Remove(emptyItem);
         }
 

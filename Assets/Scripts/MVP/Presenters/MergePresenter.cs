@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.GridPawns;
+using Core.GridPawns.Effect;
 using Core.Helpers;
 using Input;
 using MVP.Models.Interface;
@@ -46,6 +47,40 @@ namespace MVP.Presenters
             _activePawn = touchedGridPawn;
             _activePawn.SetSortingOrder(1000); //TODO:
         }
+        
+        private void OnReleased()
+        {
+            if(_activePawn == null) return;
+            _activePawn.PawnEffect.SetFocus(1);
+
+            var closestCoordinate = GridPositionHelper.FindClosestCoordinateAfterRelease(_activePawn.transform.position);
+            var oldPos = GridPositionHelper.GetWorldPositionFromCoordinate(_activePawn.Coordinate);
+            
+            if (closestCoordinate == null)
+            {
+                _activePawn.SetWorldPosition(oldPos, true, 0.3f);
+            }
+            else
+            {
+                var pawn = _gridModel.Grid[closestCoordinate.Value.x, closestCoordinate.Value.y];
+                var pawnPos = GridPositionHelper.GetWorldPositionFromCoordinate(pawn.Coordinate);
+                
+                if (_activePawn.Level == pawn.Level && _activePawn.Type.Equals(pawn.Type))
+                {
+
+                }
+                else
+                {
+                    var firstCoord = _activePawn.Coordinate;
+                    var secondCoord = pawn.Coordinate;
+                    GridItemModifierHelper.SwapItems(_gridModel.Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
+
+                    pawn.SetWorldPosition(oldPos, true, 0.3f);
+                    _activePawn.SetWorldPosition(pawnPos, true, 0.3f);
+                }
+            }
+        }
+        
         private void OnDoubleTouched()
         {
             if (!(_activePawn is Producer producer)) return;
@@ -87,21 +122,14 @@ namespace MVP.Presenters
         
         private void ReplaceProducer(Producer producer, Vector2Int newPosition)
         {
-            var newProducer = _gridPawnFactoryHandler.RecycleProducer(producer, newPosition);
-            _gridModel.UpdateGridPawns(new List<GridPawn> { newProducer }, new Vector2Int(newPosition.x, newPosition.y - _gridModel.ColumnCount), true, 0.7f);
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-
-        private void OnReleased()
-        {
+            _activePawn.PawnEffect.SetFocus(0);
+            _activePawn = null;//TODO:
             
+            var newProducer = _gridPawnFactoryHandler.RecycleProducer(producer, newPosition);
+            _gridModel.UpdateGridPawns(new List<GridPawn> { newProducer }, 
+                new Vector2Int(newPosition.x, newPosition.y - _gridModel.ColumnCount), true, 0.7f);
         }
+
+
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2920880288131243221}
   - component: {fileID: 7985866748399286405}
   m_Layer: 0
-  m_Name: Appliance_Glow
+  m_Name: VFX_Appliance_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
