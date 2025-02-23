@@ -66,17 +66,10 @@ namespace MVP.Presenters
             obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr);
         }
         
-        private void GridPawnUpdated(GridPawn obj, Vector2Int? newCoord, bool isAnimOn)
+        private void GridPawnUpdated(GridPawn obj, Vector2Int? newCoord, bool isAnimOn, float animTime)
         {
             obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, newCoord);
-            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, null, true);
-        }
-        
-        private void GridPawnUpdated(GridPawn obj, bool isAnimOn, Vector2Int? spawnCoordinate)
-        {
-            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, spawnCoordinate, false);
-
-            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, null, true);
+            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, null, true, animTime);
         }
     }
 }

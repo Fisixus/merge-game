@@ -46,19 +46,25 @@ namespace Core.GridPawns
             _gridPawnEffect = GetComponent<GridPawnEffect>();
         }
 
-        public void SetWorldPosition(Vector2 longestCell, Transform gridTopLeftTr, Vector2Int? coordinateOverride = null, bool isAnimOn = false)
+        public void SetWorldPosition(Vector2 longestCell, Transform gridTopLeftTr, Vector2Int? coordinateOverride = null, bool isAnimOn = false, float animTime = 0.3f)
         {
             // Use the provided override coordinate or default to the current coordinate
             var targetCoordinate = coordinateOverride ?? Coordinate;
 
             // Calculate the world position
             var position = CalculateWorldPosition(longestCell, gridTopLeftTr, targetCoordinate);
-
+            
             // Apply the position with or without animation
             if (isAnimOn)
             {
+                int sortingOrder = SpriteRenderer.sortingOrder;
+                SetSortingOrder(1000);
                 BoxCollider.enabled = false;
-                _gridPawnEffect.Shift(position, ()=>BoxCollider.enabled=true);
+                _gridPawnEffect.Shift(position, ()=>
+                {
+                    BoxCollider.enabled = true;
+                    SetSortingOrder(sortingOrder);
+                }, animTime);
             }
             else
             {

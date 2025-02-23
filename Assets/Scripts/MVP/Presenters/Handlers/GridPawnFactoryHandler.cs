@@ -64,5 +64,12 @@ namespace MVP.Presenters.Handlers
         {
             return _applianceFactory.GenerateAppliance(producerGeneratedApplianceType, level, closestCoord);
         }
+
+        public Producer RecycleProducer(Producer producer, Vector2Int randomEmptyCoordinate)
+        {
+            var newProducer = _producerFactory.GenerateProducer(producer.ProducerType, producer.Level, randomEmptyCoordinate);
+            _producerFactory.DestroyObj(producer);
+            return newProducer;
+        }
     }
 }

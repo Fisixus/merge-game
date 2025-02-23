@@ -17,7 +17,7 @@ namespace MVP.Models
         public int RowCount { get; private set; }
         
         public event Action<GridPawn> OnGridPawnInitialized;
-        public event Action<GridPawn, Vector2Int?, bool> OnGridPawnUpdated;
+        public event Action<GridPawn, Vector2Int?, bool, float> OnGridPawnUpdated;
 
         public GridModel(GridPawnFactoryHandler gridPawnFactoryHandler)
         {
@@ -34,12 +34,12 @@ namespace MVP.Models
                 OnGridPawnInitialized?.Invoke(Grid[i, j]);
             }
         }
-        public void UpdateGridPawns(List<GridPawn> newGridPawns, Vector2Int? creationCoord, bool isAnimationOn)
+        public void UpdateGridPawns(List<GridPawn> newGridPawns, Vector2Int? coordOverride, bool isAnimationOn, float animTime)
         {
             foreach (var newGridPawn in newGridPawns)
             {
                 Grid[newGridPawn.Coordinate.x, newGridPawn.Coordinate.y] = newGridPawn;
-                OnGridPawnUpdated?.Invoke(newGridPawn, creationCoord, isAnimationOn);
+                OnGridPawnUpdated?.Invoke(newGridPawn, coordOverride, isAnimationOn, animTime);
             }
         }
         

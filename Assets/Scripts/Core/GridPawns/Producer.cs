@@ -68,7 +68,7 @@ namespace Core.GridPawns
                 if (Capacity < _maxCapacity)
                 {
                     Capacity++;
-                    Debug.Log($"Capacity increased to: {Capacity}");
+                    //Debug.Log($"Capacity increased to: {Capacity}");
 
                     // Stop the coroutine when MaxCapacity is reached
                     if (Capacity >= _maxCapacity)
@@ -82,12 +82,13 @@ namespace Core.GridPawns
         public void ReduceCapacity()
         {
             Capacity = Mathf.Max(0, --Capacity);
-            Debug.Log($"Capacity reduced to: {Capacity}");
+            //Debug.Log($"Capacity reduced to: {Capacity}");
 
-            if (Capacity < _maxCapacity)
+            if (Capacity != 0 && Capacity < _maxCapacity)
             {
                 StartCapacityIncrease(); // Restart capacity increase if needed
             }
+            
         }
 
         public override string ToString()

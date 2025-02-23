@@ -50,6 +50,33 @@ namespace Core.Helpers
             return closestCoord;
         }
 
+        public static Vector2Int? FindRandomEmptyCoordinate(GridPawn[,] grid)
+        {
+            int columnCount = grid.GetLength(0);
+            int rowCount = grid.GetLength(1);
+            List<Vector2Int> emptyCoordinates = new List<Vector2Int>();
+
+            // Collect all empty coordinates
+            for (int x = 0; x < columnCount; x++)
+            {
+                for (int y = 0; y < rowCount; y++)
+                {
+                    if (grid[x, y].IsEmpty)
+                    {
+                        emptyCoordinates.Add(new Vector2Int(x, y));
+                    }
+                }
+            }
+
+            // Return a random empty coordinate if available
+            if (emptyCoordinates.Count > 0)
+            {
+                return emptyCoordinates[UnityEngine.Random.Range(0, emptyCoordinates.Count)];
+            }
+
+            return null; // No empty coordinate found
+        }
+
 
         /// <summary> Finds the closest empty coordinate using a breadth-first search (BFS). </summary>
         public static Vector2Int? FindClosestEmptyCoordinate(Vector2Int origin, GridPawn[,] grid)

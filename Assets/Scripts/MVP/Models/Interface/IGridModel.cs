@@ -15,8 +15,8 @@ namespace MVP.Models.Interface
         void LoadGrid(GridInfo gridInfo);
         void SaveGrid();
         event Action<GridPawn> OnGridPawnInitialized;
-        event Action<GridPawn, Vector2Int?, bool> OnGridPawnUpdated;
+        event Action<GridPawn, Vector2Int?, bool, float> OnGridPawnUpdated;
 
-        void UpdateGridPawns(List<GridPawn> gridPawns, Vector2Int? creationCoord, bool isAnimOn);
+        void UpdateGridPawns(List<GridPawn> gridPawns, Vector2Int? coordOverride, bool isAnimOn = false, float animTime = 0.3f);
     }
 }

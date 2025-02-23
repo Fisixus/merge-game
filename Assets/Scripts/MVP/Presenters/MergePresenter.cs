@@ -48,22 +48,57 @@ namespace MVP.Presenters
         }
         private void OnDoubleTouched()
         {
-            if (_activePawn is Producer producer)
-            {
-                // Get the closest isEmpty coordinate from _gridModel.Grid
-                var emptyCoord = GridPositionHelper.FindClosestEmptyCoordinate(_activePawn.Coordinate, _gridModel.Grid);
-                // Grid is full
-                if (emptyCoord == null)
-                {
-                    Debug.Log("FULL!");
-                    return;
-                }
-                int level = producer.GetApplianceLevelToProduce();
-                var appliance = _gridPawnFactoryHandler.GenerateAppliance(producer.GeneratedApplianceType, level, emptyCoord.Value);
-                _gridModel.UpdateGridPawns(new List<GridPawn>{appliance}, _activePawn.Coordinate, true);
-                producer.ReduceCapacity();
-            }
+            if (!(_activePawn is Producer producer)) return;
+
+            TryProduceAppliance(producer);
         }
+
+        private void TryProduceAppliance(Producer producer)
+        {
+            var emptyCoord = FindClosestEmptyCoordinate(producer.Coordinate);
+
+            if (emptyCoord == null) return; // Grid is full
+
+            ProduceAppliance(producer, emptyCoord.Value);
+            HandleProducerCapacity(producer);
+        }
+
+        private Vector2Int? FindClosestEmptyCoordinate(Vector2Int origin)
+        {
+            return GridPositionHelper.FindClosestEmptyCoordinate(origin, _gridModel.Grid);
+        }
+
+        private void ProduceAppliance(Producer producer, Vector2Int emptyCoord)
+        {
+            int level = producer.GetApplianceLevelToProduce();
+            var appliance = _gridPawnFactoryHandler.GenerateAppliance(producer.GeneratedApplianceType, level, emptyCoord);
+    
+            _gridModel.UpdateGridPawns(new List<GridPawn> { appliance }, _activePawn.Coordinate, true, 0.3f);
+            producer.ReduceCapacity();
+        }
+
+        private void HandleProducerCapacity(Producer producer)
+        {
+            if (producer.Capacity > 0) return;
+
+            var newPosition = GridPositionHelper.FindRandomEmptyCoordinate(_gridModel.Grid) ?? producer.Coordinate;
+            ReplaceProducer(producer, newPosition);
+        }
+        
+        private void ReplaceProducer(Producer producer, Vector2Int newPosition)
+        {
+            var newProducer = _gridPawnFactoryHandler.RecycleProducer(producer, newPosition);
+            _gridModel.UpdateGridPawns(new List<GridPawn> { newProducer }, new Vector2Int(newPosition.x, newPosition.y - _gridModel.ColumnCount), true, 0.7f);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+
         private void OnReleased()
         {
             

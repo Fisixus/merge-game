@@ -27,8 +27,6 @@ namespace Core.Factories
             var appliance = CreateObj();
             appliance.SetAttributes(applianceCoordinate, applianceType, applianceLevel);
 
-            Debug.Log("AA!");
-            
             if (ApplianceDataDict.TryGetValue(applianceType, out var applianceData) &&
                 applianceData.ApplianceLevelDataDict.TryGetValue(applianceLevel, out var levelData))
             {
