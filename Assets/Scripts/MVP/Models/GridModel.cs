@@ -34,7 +34,7 @@ namespace MVP.Models
                 Grid[i, j] = gridObjs[i * RowCount + j];
                 OnGridPawnInitialized?.Invoke(Grid[i, j]);
             }
-            SaveGrid();
+            //SaveGrid();
         }
         public void UpdateGridPawns(List<GridPawn> newGridPawns, Vector2Int? coordOverride, bool isAnimationOn, float animTime)
         {
@@ -44,7 +44,7 @@ namespace MVP.Models
                 Grid[newGridPawn.Coordinate.x, newGridPawn.Coordinate.y] = newGridPawn;
                 OnGridPawnUpdated?.Invoke(newGridPawn, coordOverride, isAnimationOn, animTime);
             }
-            SaveGrid();
+            //SaveGrid();
         }
         
         public void SwapGridItems(GridPawn firstPawn, GridPawn secondPawn)
@@ -52,7 +52,7 @@ namespace MVP.Models
             var firstCoord = firstPawn.Coordinate;
             var secondCoord = secondPawn.Coordinate;
             GridItemModifierHelper.SwapItems(Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
-            SaveGrid();
+            //SaveGrid();
         }
 
         public GridInfo GetGridInfo()

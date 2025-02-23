@@ -60,12 +60,12 @@ namespace Core.GridPawns
             if (isAnimOn)
             {
                 int sortingOrder = SpriteRenderer.sortingOrder;
-                SetSortingOrder(1000);
+                SetSortingOrder(1000, "UI");
                 BoxCollider.enabled = false;
                 PawnEffect.Shift(worldPos, ()=>
                 {
                     BoxCollider.enabled = true;
-                    SetSortingOrder(sortingOrder);
+                    SetSortingOrder(sortingOrder, "Pawns");
                 }, animTime);
             }
             else
@@ -85,12 +85,12 @@ namespace Core.GridPawns
             if (isAnimOn)
             {
                 int sortingOrder = SpriteRenderer.sortingOrder;
-                SetSortingOrder(1000);
+                SetSortingOrder(1000, "UI");
                 BoxCollider.enabled = false;
                 PawnEffect.Shift(position, ()=>
                 {
                     BoxCollider.enabled = true;
-                    SetSortingOrder(sortingOrder);
+                    SetSortingOrder(sortingOrder, "Pawns");
                 }, animTime);
             }
             else
@@ -117,7 +117,7 @@ namespace Core.GridPawns
             Coordinate = newCoord;
             Type = type;
             name = ToString();
-            SetSortingOrder(-newCoord.y);
+            SetSortingOrder(-newCoord.y, "Pawns");
 
             // Update the GridAttributes
             IsEmpty = Type is ApplianceType.None or ProducerType.None;
@@ -130,8 +130,9 @@ namespace Core.GridPawns
             name = ToString();
         }
 
-        public void SetSortingOrder(int order)
+        public void SetSortingOrder(int order, string layerName)
         {
+            SpriteRenderer.sortingLayerName = layerName;
             SpriteRenderer.sortingOrder = order;
         }
 

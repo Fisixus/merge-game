@@ -19,6 +19,7 @@ namespace MVP.Presenters
         private readonly MergeGlowEffectHandler _mergeGlowEffectHandler;
         
         private GridPawn _activePawn;
+        private int _activeSortingOrder;
 
         public MergePresenter(IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler, 
             DisappearEffectHandler disappearEffectHandler, MergeGlowEffectHandler mergeGlowEffectHandler)
@@ -50,24 +51,39 @@ namespace MVP.Presenters
         
         private void OnTouched(GridPawn touchedGridPawn)
         {
-            _activePawn = touchedGridPawn;
-            _activePawn.SetSortingOrder(1000); //TODO:
-
-            if (_activePawn is Appliance && _activePawn.Level == _activePawn.MaxLevel)
+            if (_activePawn != null)
             {
-                _disappearEffectHandler.PlayDisappearEffect(_activePawn.transform.position, ColorType.White).Forget();
-                _gridPawnFactoryHandler.DestroyPawn(_activePawn);
-                _gridModel.UpdateGridPawns(new List<GridPawn> { _activePawn}, null, false);
-                
                 _activePawn.PawnEffect.SetFocus(false);
-                _activePawn = null;
             }
+    
+            _activePawn = touchedGridPawn;
+            _activeSortingOrder = _activePawn.SpriteRenderer.sortingOrder;
+            _activePawn.SetSortingOrder(1000, "UI"); // TODO: Ensure sorting logic is correct
+
+            if (ShouldDestroy(_activePawn))
+            {
+                HandlePawnDestruction(_activePawn);
+            }
+        }
+        private bool ShouldDestroy(GridPawn pawn)
+        {
+            return pawn is Appliance && pawn.Level == pawn.MaxLevel;
+        }
+
+        private void HandlePawnDestruction(GridPawn pawn)
+        {
+            _disappearEffectHandler.PlayDisappearEffect(pawn.transform.position, ColorType.White).Forget();
+            _gridPawnFactoryHandler.DestroyPawn(pawn);
+            _gridModel.UpdateGridPawns(new List<GridPawn> { pawn }, null, false);
+
+            pawn.PawnEffect.SetFocus(false);
+            _activePawn = null;
         }
         
         private void OnReleased()
         {
             if (_activePawn == null) return;
-
+            _activePawn.SetSortingOrder(_activeSortingOrder, "Pawns");
             _activePawn.PawnEffect.SetFocus(true);
 
             var closestCoordinate = GridPositionHelper.FindClosestCoordinateAfterRelease(_activePawn.transform.position);
@@ -115,11 +131,13 @@ namespace MVP.Presenters
         private void MergePawns(GridPawn targetPawn)
         {
             var newPawn = _gridPawnFactoryHandler.MergePawns(_activePawn, targetPawn);
+            newPawn.PawnEffect.SetFocus(true);
+            
             _gridModel.UpdateGridPawns(new List<GridPawn> { newPawn }, null, false);
             _mergeGlowEffectHandler.PlayMergeGlowEffect(newPawn.transform.position, ColorType.Blue).Forget();
             
             _activePawn.PawnEffect.SetFocus(false);
-            _activePawn = null;
+            _activePawn = newPawn;
         }
 
         private void SwapPawns(GridPawn targetPawn, Vector3 oldPos, Vector3 targetPos)

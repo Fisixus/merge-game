@@ -49,6 +49,9 @@ TagManager:
   - name: Pawns
     uniqueID: 1000532377
     locked: 0
+  - name: Additions
+    uniqueID: 1349839873
+    locked: 0
   - name: Particles
     uniqueID: 2959877425
     locked: 0
