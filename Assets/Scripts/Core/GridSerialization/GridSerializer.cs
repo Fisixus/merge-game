@@ -38,7 +38,6 @@ namespace Core.GridSerialization
                             level = grid[i, j].Level
                         };
                         jsonPawn[i, j] = pawn;
-                        Debug.Log(pawn.level);
                     }
                 }
 
@@ -66,7 +65,6 @@ namespace Core.GridSerialization
             {
                 gridPawnLevels[i, j] = gridJson.grid[gridIndex].level;
                 gridPawnTypes[i, j] = ConvertJsonToPawnType(gridJson.grid[gridIndex].pawn_type);
-                Debug.Log(gridPawnTypes[i, j]);
                 gridIndex++;
             }
 

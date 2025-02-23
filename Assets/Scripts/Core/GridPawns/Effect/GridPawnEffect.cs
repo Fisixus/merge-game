@@ -10,21 +10,38 @@ namespace Core.GridPawns.Effect
         [field: SerializeField] public SpriteRenderer LastLevelSprite { get; private set; }
         private Tween _shiftTween;
         
-        public void SetLastLevel(float scale)
+        public void SetLastLevel(bool isLast)
         {
             LastLevelSprite.transform.DOKill();
-            LastLevelSprite.transform.DOScale(scale, 0.15f);
+
+            if (isLast)
+            {
+                LastLevelSprite.transform.DOScale(1f, 0.15f);
+            }
+            else
+            {
+                LastLevelSprite.transform.localScale = Vector3.zero;
+            }
         }
         
-        public void SetFocus(float scale)
+        public void SetFocus(bool isFocusing)
         {
             transform.DOKill();
             FocusSprite.transform.DOKill();
-            transform.localScale = Vector3.one;
 
-            FocusSprite.transform.DOScale(scale, 0.15f);
-            if(scale >= 1f)
+            if (isFocusing)
+            {
+                transform.localScale = Vector3.one;
+                
+                FocusSprite.transform.DOScale(1f, 0.15f);
                 transform.DOScale(0.9f, 0.15f).SetLoops(2, LoopType.Yoyo);
+            }
+            else
+            {
+                transform.localScale = Vector3.one;
+                FocusSprite.transform.localScale = Vector3.zero;
+
+            }
         }
 
         public void Shift(Vector3 position, Action a, float animTime=0.3f)

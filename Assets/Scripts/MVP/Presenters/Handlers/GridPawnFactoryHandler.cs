@@ -46,6 +46,22 @@ namespace MVP.Presenters.Handlers
             _producerFactory.DestroyAllProducers();
         }
         
+        public void DestroyPawn(GridPawn pawn)
+        {
+            switch (pawn)
+            {
+                case Appliance appliance:
+                    _applianceFactory.DestroyObj(appliance);
+                    break;
+                case Producer producer:
+                    _producerFactory.DestroyObj(producer);
+                    break;
+                default:
+                    Debug.LogWarning($"Unknown grid type: {pawn}");
+                    break;
+            }
+        }
+        
         private GridPawn CreateGridPawn(Enum pawnType, int level, Vector2Int coordinate)
         {
             switch (pawnType)
@@ -71,5 +87,49 @@ namespace MVP.Presenters.Handlers
             _producerFactory.DestroyObj(producer);
             return newProducer;
         }
+
+        public GridPawn MergePawns(GridPawn pawn1, GridPawn pawn2)
+        {
+            if (pawn1 == null || pawn2 == null)
+            {
+                Debug.LogWarning("Attempted to merge null pawns.");
+                return null;
+            }
+
+            var newLevel = pawn1.Level + 1;
+            var newCoordinate = pawn2.Coordinate;
+
+            return pawn1 switch
+            {
+                Appliance appliance1 when pawn2 is Appliance appliance2 
+                    => MergeAppliances(appliance1, appliance2, newLevel, newCoordinate),
+                Producer producer1 when pawn2 is Producer producer2 
+                    => MergeProducers(producer1, producer2, newLevel, newCoordinate),
+                _ => HandleUnknownType(pawn1, newCoordinate)
+            };
+        }
+
+        private GridPawn MergeAppliances(Appliance appliance1, Appliance appliance2, int newLevel, Vector2Int coordinate)
+        {
+            var newAppliance = _applianceFactory.GenerateAppliance(appliance1.ApplianceType, newLevel, coordinate);
+            _applianceFactory.DestroyObj(appliance1);
+            _applianceFactory.DestroyObj(appliance2);
+            return newAppliance;
+        }
+
+        private GridPawn MergeProducers(Producer producer1, Producer producer2, int newLevel, Vector2Int coordinate)
+        {
+            var newProducer = _producerFactory.GenerateProducer(producer1.ProducerType, newLevel, coordinate);
+            _producerFactory.DestroyObj(producer1);
+            _producerFactory.DestroyObj(producer2);
+            return newProducer;
+        }
+        
+        private GridPawn HandleUnknownType(GridPawn pawn, Vector2Int coordinate)
+        {
+            Debug.LogWarning($"Unknown grid type: {pawn.Type} at {coordinate}");
+            return null;
+        }
+
     }
 }

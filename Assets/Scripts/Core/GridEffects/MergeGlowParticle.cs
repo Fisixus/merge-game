@@ -2,15 +2,15 @@ using UnityEngine;
 
 namespace Core.GridEffects
 {
-    public class DisappearParticle : MonoBehaviour
+    public class MergeGlowParticle : MonoBehaviour
     {
-        [field: SerializeField] public ParticleSystem DisappearParticleSystem { get; private set; }
+        [field: SerializeField] public ParticleSystem MergeGlowParticleSystem { get; private set; }
 
         private ParticleSystem.MainModule _particleSettings;
 
         private void Awake()
         {
-            _particleSettings = DisappearParticleSystem.main;
+            _particleSettings = MergeGlowParticleSystem.main;
         }
 
         public void SetColor(Color color)
@@ -20,8 +20,8 @@ namespace Core.GridEffects
 
         public float Play()
         {
-            var duration = DisappearParticleSystem.main.duration;
-            DisappearParticleSystem.Play();
+            var duration = MergeGlowParticleSystem.main.duration;
+            MergeGlowParticleSystem.Play();
             return duration;
         }
     }

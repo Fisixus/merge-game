@@ -7,6 +7,6 @@ namespace Core.Factories.Interface
     public interface IDisappearEffectFactory : IFactory<DisappearParticle>
     {
         SerializedDictionary<ColorType, Color> DisappearEffectColorDict { get; }
-        DisappearParticle GenerateRocketExplosionEffect(ColorType colorType);
+        DisappearParticle GenerateDisappearEffect(ColorType colorType);
     }
 }

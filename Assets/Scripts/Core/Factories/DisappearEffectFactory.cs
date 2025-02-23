@@ -17,7 +17,7 @@ namespace Core.Factories
             Pool = new ObjectPool<DisappearParticle>(ObjPrefab, ParentTr, 8);
         }
         
-        public DisappearParticle GenerateRocketExplosionEffect(ColorType colorType)
+        public DisappearParticle GenerateDisappearEffect(ColorType colorType)
         {
             var disappearEffect = CreateObj();
             disappearEffect.SetColor(DisappearEffectColorDict[colorType]);

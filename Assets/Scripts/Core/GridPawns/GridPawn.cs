@@ -26,7 +26,7 @@ namespace Core.GridPawns
             private set
             {
                 _level = value;
-                PawnEffect.SetLastLevel(MaxLevel == _level ? 1f : 0f);
+                PawnEffect.SetLastLevel(MaxLevel == _level);
             }
         }
 
@@ -127,6 +127,7 @@ namespace Core.GridPawns
         {
             MaxLevel = maxLevel;
             Level = level;
+            name = ToString();
         }
 
         public void SetSortingOrder(int order)

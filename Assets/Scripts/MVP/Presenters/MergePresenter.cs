@@ -16,14 +16,17 @@ namespace MVP.Presenters
         private readonly IGridModel _gridModel;
         private readonly GridPawnFactoryHandler _gridPawnFactoryHandler;
         private readonly DisappearEffectHandler _disappearEffectHandler;
+        private readonly MergeGlowEffectHandler _mergeGlowEffectHandler;
         
         private GridPawn _activePawn;
 
-        public MergePresenter(IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler, DisappearEffectHandler disappearEffectHandler)
+        public MergePresenter(IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler, 
+            DisappearEffectHandler disappearEffectHandler, MergeGlowEffectHandler mergeGlowEffectHandler)
         {
             _gridModel = gridModel;
             _gridPawnFactoryHandler = gridPawnFactoryHandler;
             _disappearEffectHandler = disappearEffectHandler;
+            _mergeGlowEffectHandler = mergeGlowEffectHandler;
             
             UserInput.OnGridPawnSingleTouched += OnTouched;
             UserInput.OnGridPawnDoubleTouched += OnDoubleTouched;
@@ -49,42 +52,84 @@ namespace MVP.Presenters
         {
             _activePawn = touchedGridPawn;
             _activePawn.SetSortingOrder(1000); //TODO:
+
+            if (_activePawn is Appliance && _activePawn.Level == _activePawn.MaxLevel)
+            {
+                _disappearEffectHandler.PlayDisappearEffect(_activePawn.transform.position, ColorType.White).Forget();
+                _gridPawnFactoryHandler.DestroyPawn(_activePawn);
+                _gridModel.UpdateGridPawns(new List<GridPawn> { _activePawn}, null, false);
+                
+                _activePawn.PawnEffect.SetFocus(false);
+                _activePawn = null;
+            }
         }
         
         private void OnReleased()
         {
-            if(_activePawn == null) return;
-            _activePawn.PawnEffect.SetFocus(1);
+            if (_activePawn == null) return;
+
+            _activePawn.PawnEffect.SetFocus(true);
 
             var closestCoordinate = GridPositionHelper.FindClosestCoordinateAfterRelease(_activePawn.transform.position);
             var oldPos = GridPositionHelper.GetWorldPositionFromCoordinate(_activePawn.Coordinate);
-            
+
             if (closestCoordinate == null)
             {
-                _activePawn.SetWorldPosition(oldPos, true, 0.3f);
+                ResetPawnPosition(oldPos);
+                return;
+            }
+
+            var targetPawn = _gridModel.Grid[closestCoordinate.Value.x, closestCoordinate.Value.y];
+    
+            if (targetPawn.Equals(_activePawn)) return;
+
+            HandlePawnInteraction(targetPawn, oldPos);
+        }
+
+        private void ResetPawnPosition(Vector3 position)
+        {
+            _activePawn.SetWorldPosition(position, true, 0.3f);
+        }
+
+        private void HandlePawnInteraction(GridPawn targetPawn, Vector3 oldPos)
+        {
+            var targetPos = GridPositionHelper.GetWorldPositionFromCoordinate(targetPawn.Coordinate);
+
+            if (CanMergeWith(targetPawn))
+            {
+                MergePawns(targetPawn);
             }
             else
             {
-                var pawn = _gridModel.Grid[closestCoordinate.Value.x, closestCoordinate.Value.y];
-                var pawnPos = GridPositionHelper.GetWorldPositionFromCoordinate(pawn.Coordinate);
-                
-                if (_activePawn.Level == pawn.Level && _activePawn.Type.Equals(pawn.Type))
-                {
-
-                }
-                else
-                {
-                    var firstCoord = _activePawn.Coordinate;
-                    var secondCoord = pawn.Coordinate;
-                    GridItemModifierHelper.SwapItems(_gridModel.Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
-
-                    pawn.SetWorldPosition(oldPos, true, 0.3f);
-                    _activePawn.SetWorldPosition(pawnPos, true, 0.3f);
-
-                }
+                SwapPawns(targetPawn, oldPos, targetPos);
             }
         }
-        
+
+        private bool CanMergeWith(GridPawn targetPawn)
+        {
+            return _activePawn.Level < _activePawn.MaxLevel &&
+                   _activePawn.Level == targetPawn.Level &&
+                   _activePawn.Type.Equals(targetPawn.Type);
+        }
+
+        private void MergePawns(GridPawn targetPawn)
+        {
+            var newPawn = _gridPawnFactoryHandler.MergePawns(_activePawn, targetPawn);
+            _gridModel.UpdateGridPawns(new List<GridPawn> { newPawn }, null, false);
+            _mergeGlowEffectHandler.PlayMergeGlowEffect(newPawn.transform.position, ColorType.Blue).Forget();
+            
+            _activePawn.PawnEffect.SetFocus(false);
+            _activePawn = null;
+        }
+
+        private void SwapPawns(GridPawn targetPawn, Vector3 oldPos, Vector3 targetPos)
+        {
+            _gridModel.SwapGridItems(_activePawn, targetPawn);
+
+            targetPawn.SetWorldPosition(oldPos, true, 0.3f);
+            _activePawn.SetWorldPosition(targetPos, true, 0.3f);
+        }
+
         private void OnDoubleTouched()
         {
             if (!(_activePawn is Producer producer)) return;
@@ -94,17 +139,12 @@ namespace MVP.Presenters
 
         private void TryProduceAppliance(Producer producer)
         {
-            var emptyCoord = FindClosestEmptyCoordinate(producer.Coordinate);
+            var emptyCoord = GridPositionHelper.FindClosestEmptyCoordinate(producer.Coordinate, _gridModel.Grid);
 
             if (emptyCoord == null) return; // Grid is full
 
             ProduceAppliance(producer, emptyCoord.Value);
             HandleProducerCapacity(producer);
-        }
-
-        private Vector2Int? FindClosestEmptyCoordinate(Vector2Int origin)
-        {
-            return GridPositionHelper.FindClosestEmptyCoordinate(origin, _gridModel.Grid);
         }
 
         private void ProduceAppliance(Producer producer, Vector2Int emptyCoord)
@@ -126,8 +166,8 @@ namespace MVP.Presenters
         
         private void ReplaceProducer(Producer producer, Vector2Int newPosition)
         {
-            _activePawn.PawnEffect.SetFocus(0);
-            _activePawn = null;//TODO:
+            _activePawn.PawnEffect.SetFocus(false);
+            _activePawn = null;
             
             _disappearEffectHandler.PlayDisappearEffect(producer.transform.position, ColorType.White).Forget();
             

@@ -18,5 +18,7 @@ namespace MVP.Models.Interface
         event Action<GridPawn, Vector2Int?, bool, float> OnGridPawnUpdated;
 
         void UpdateGridPawns(List<GridPawn> gridPawns, Vector2Int? coordOverride, bool isAnimOn = false, float animTime = 0.3f);
+
+        void SwapGridItems(GridPawn firstPawn, GridPawn secondPawn);
     }
 }

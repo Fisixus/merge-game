@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.GridPawns;
 using Core.GridPawns.Enum;
 using Core.GridSerialization;
+using Core.Helpers;
 using MVP.Models.Interface;
 using MVP.Presenters.Handlers;
 using UnityEngine;
@@ -33,16 +34,26 @@ namespace MVP.Models
                 Grid[i, j] = gridObjs[i * RowCount + j];
                 OnGridPawnInitialized?.Invoke(Grid[i, j]);
             }
+            SaveGrid();
         }
         public void UpdateGridPawns(List<GridPawn> newGridPawns, Vector2Int? coordOverride, bool isAnimationOn, float animTime)
         {
             foreach (var newGridPawn in newGridPawns)
             {
+                //Debug.Log(newGridPawn);
                 Grid[newGridPawn.Coordinate.x, newGridPawn.Coordinate.y] = newGridPawn;
                 OnGridPawnUpdated?.Invoke(newGridPawn, coordOverride, isAnimationOn, animTime);
             }
+            SaveGrid();
         }
         
+        public void SwapGridItems(GridPawn firstPawn, GridPawn secondPawn)
+        {
+            var firstCoord = firstPawn.Coordinate;
+            var secondCoord = secondPawn.Coordinate;
+            GridItemModifierHelper.SwapItems(Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
+            SaveGrid();
+        }
 
         public GridInfo GetGridInfo()
         {

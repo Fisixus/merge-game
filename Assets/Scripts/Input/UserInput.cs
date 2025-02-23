@@ -53,7 +53,7 @@ namespace Input
             var hit = Physics2D.Raycast(_cam.ScreenToWorldPoint(UnityEngine.Input.mousePosition), Vector2.zero);
             if (hit && hit.transform.TryGetComponent<GridPawn>(out var gridPawn))
             {
-                if(_activePawn != null) _activePawn.PawnEffect.SetFocus(0);
+                if(_activePawn != null) _activePawn.PawnEffect.SetFocus(false);
                 _activePawn = gridPawn;
             }
             else
@@ -66,7 +66,7 @@ namespace Input
         {
             GetPawn();
             if(_activePawn == null) return;
-            _activePawn.PawnEffect.SetFocus(1);
+            _activePawn.PawnEffect.SetFocus(true);
 
             _isDragging = true;
             OnGridPawnSingleTouched?.Invoke(_activePawn);
@@ -96,7 +96,7 @@ namespace Input
         private void OnDrag(InputAction.CallbackContext context)
         {
             if (_activePawn == null || !_isDragging) return;
-            _activePawn.PawnEffect.SetFocus(0);
+            _activePawn.PawnEffect.SetFocus(false);
 
             Vector2 currentPosition = context.ReadValue<Vector2>();
 
