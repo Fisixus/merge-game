@@ -5,6 +5,7 @@ using Core.GridPawns.Enum;
 using Core.GridSerialization;
 using MVP.Models.Interface;
 using MVP.Presenters.Handlers;
+using UnityEngine;
 
 namespace MVP.Models
 {
@@ -15,7 +16,8 @@ namespace MVP.Models
         public int ColumnCount { get; private set; }
         public int RowCount { get; private set; }
         
-        public event Action<GridPawn> OnGridPawnInitializedEvent;
+        public event Action<GridPawn> OnGridPawnInitialized;
+        public event Action<GridPawn, Vector2Int?, bool> OnGridPawnUpdated;
 
         public GridModel(GridPawnFactoryHandler gridPawnFactoryHandler)
         {
@@ -29,9 +31,18 @@ namespace MVP.Models
             for (var j = 0; j < RowCount; j++)
             {
                 Grid[i, j] = gridObjs[i * RowCount + j];
-                OnGridPawnInitializedEvent?.Invoke(Grid[i, j]);
+                OnGridPawnInitialized?.Invoke(Grid[i, j]);
             }
         }
+        public void UpdateGridPawns(List<GridPawn> newGridPawns, Vector2Int? creationCoord, bool isAnimationOn)
+        {
+            foreach (var newGridPawn in newGridPawns)
+            {
+                Grid[newGridPawn.Coordinate.x, newGridPawn.Coordinate.y] = newGridPawn;
+                OnGridPawnUpdated?.Invoke(newGridPawn, creationCoord, isAnimationOn);
+            }
+        }
+        
 
         public GridInfo GetGridInfo()
         {

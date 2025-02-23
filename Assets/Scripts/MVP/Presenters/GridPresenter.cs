@@ -21,7 +21,8 @@ namespace MVP.Presenters
             _taskHandler = taskHandler;
             _gridView = gridView;
 
-            _gridModel.OnGridPawnInitializedEvent += GridPawnInitialized;
+            _gridModel.OnGridPawnInitialized += GridPawnInitialized;
+            _gridModel.OnGridPawnUpdated += GridPawnUpdated;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
         }
         
@@ -31,7 +32,8 @@ namespace MVP.Presenters
         }
         private void Dispose()
         {
-            _gridModel.OnGridPawnInitializedEvent -= GridPawnInitialized;
+            _gridModel.OnGridPawnInitialized -= GridPawnInitialized;
+            _gridModel.OnGridPawnUpdated -= GridPawnUpdated;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
         
@@ -61,7 +63,20 @@ namespace MVP.Presenters
        
         private void GridPawnInitialized(GridPawn obj)
         {
-            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, null);
+            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr);
+        }
+        
+        private void GridPawnUpdated(GridPawn obj, Vector2Int? newCoord, bool isAnimOn)
+        {
+            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, newCoord);
+            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, null, true);
+        }
+        
+        private void GridPawnUpdated(GridPawn obj, bool isAnimOn, Vector2Int? spawnCoordinate)
+        {
+            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, spawnCoordinate, false);
+
+            obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, null, true);
         }
     }
 }

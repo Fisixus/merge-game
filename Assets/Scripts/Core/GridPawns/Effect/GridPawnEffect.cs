@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Core.GridPawns.Effect
     public class GridPawnEffect : MonoBehaviour
     {
         [field: SerializeField] public SpriteRenderer FocusSprite { get; private set; }
-
+        private Tween _shiftTween;
         public void SetFocus(float scale)
         {
             transform.DOKill();
@@ -18,5 +19,10 @@ namespace Core.GridPawns.Effect
                 transform.DOScale(0.9f, 0.15f).SetLoops(2, LoopType.Yoyo);
         }
 
+        public void Shift(Vector3 position, Action a, float animTime=0.3f)
+        {
+            _shiftTween?.Kill(); // Ensure only one tween sequence is active
+            _shiftTween = transform.DOMove(position, animTime).SetEase(Ease.OutQuad).OnComplete(a.Invoke);
+        }
     }
 }

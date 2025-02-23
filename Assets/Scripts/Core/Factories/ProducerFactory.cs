@@ -19,8 +19,8 @@ namespace Core.Factories
 
         public override void PreInitialize()
         {
-            Pool = new ObjectPool<Producer>(ObjPrefab, ParentTr, 8);
-            _allProducers = new List<Producer>(8);
+            Pool = new ObjectPool<Producer>(ObjPrefab, ParentTr, 32);
+            _allProducers = new List<Producer>(32);
         }
     
         public Producer GenerateProducer(ProducerType producerType, int producerLevel, Vector2Int producerCoordinate)

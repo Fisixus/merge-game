@@ -94,5 +94,31 @@ namespace Core.GridPawns
         {
             return $"Column{Coordinate.x},Row{Coordinate.y}, Level:{Level}, Type:{ProducerType}";
         }
+
+        /// <summary> Selects an appliance level to produce based on the probability ratios. </summary>
+        public int GetApplianceLevelToProduce()
+        {
+            if (GeneratingRatioDict == null || GeneratingRatioDict.Count == 0)
+            {
+                Debug.LogError("GeneratingRatioDict is empty! Returning default level 1.");
+                return 1; // Default level
+            }
+
+            float randomValue = UnityEngine.Random.value; // Random float between 0.0 - 1.0
+            float cumulativeProbability = 0f;
+
+            foreach (var kvp in GeneratingRatioDict)
+            {
+                cumulativeProbability += kvp.Value;
+
+                if (randomValue <= cumulativeProbability)
+                {
+                    return kvp.Key; // Return selected appliance level
+                }
+            }
+
+            Debug.LogError("No valid appliance level found in GeneratingRatioDict. Returning default.");
+            return 1; // Fallback default level
+        }
     }
 }

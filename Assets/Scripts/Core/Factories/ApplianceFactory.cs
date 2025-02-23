@@ -18,8 +18,8 @@ namespace Core.Factories
         
         public override void PreInitialize()
         {
-            Pool = new ObjectPool<Appliance>(ObjPrefab, ParentTr, 32);
-            _allAppliances = new List<Appliance>(32);
+            Pool = new ObjectPool<Appliance>(ObjPrefab, ParentTr, 64);
+            _allAppliances = new List<Appliance>(64);
         }
     
         public Appliance GenerateAppliance(ApplianceType applianceType, int applianceLevel, Vector2Int applianceCoordinate)
@@ -27,6 +27,8 @@ namespace Core.Factories
             var appliance = CreateObj();
             appliance.SetAttributes(applianceCoordinate, applianceType, applianceLevel);
 
+            Debug.Log("AA!");
+            
             if (ApplianceDataDict.TryGetValue(applianceType, out var applianceData) &&
                 applianceData.ApplianceLevelDataDict.TryGetValue(applianceLevel, out var levelData))
             {

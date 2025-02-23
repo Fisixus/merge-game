@@ -79,7 +79,7 @@ namespace Input
             {
                 _lastPosition = Mouse.current.position.ReadValue();
             }
-            Debug.Log("Drag Started at: " + _lastPosition);
+            //ebug.Log("Drag Started at: " + _lastPosition);
         }
 
         private void OnRelease(InputAction.CallbackContext context)
@@ -89,7 +89,7 @@ namespace Input
             _isDragging = false;
             OnGridPawnReleased?.Invoke();
 
-            Debug.Log("Drag Stopped.");
+            //Debug.Log("Drag Stopped.");
         }
 
         private void OnDrag(InputAction.CallbackContext context)
@@ -114,7 +114,7 @@ namespace Input
 
         private void OnDoubleTouch(InputAction.CallbackContext context)
         {
-            Debug.Log("Double Tap Detected!");
+            //Debug.Log("Double Tap Detected!");
             OnGridPawnDoubleTouched?.Invoke();
         }
         

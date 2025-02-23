@@ -1,3 +1,5 @@
+using System;
+using Core.GridPawns.Effect;
 using Core.GridPawns.Enum;
 using Core.GridPawns.Interface;
 using Core.Helpers;
@@ -37,15 +39,31 @@ namespace Core.GridPawns
         }
 
         private bool _isEmpty;
-        
-        public void SetWorldPosition(Vector2 longestCell, Transform gridTopLeftTr, Vector2Int? coordinateOverride = null)
+        private GridPawnEffect _gridPawnEffect;
+
+        private void Awake()
+        {
+            _gridPawnEffect = GetComponent<GridPawnEffect>();
+        }
+
+        public void SetWorldPosition(Vector2 longestCell, Transform gridTopLeftTr, Vector2Int? coordinateOverride = null, bool isAnimOn = false)
         {
             // Use the provided override coordinate or default to the current coordinate
             var targetCoordinate = coordinateOverride ?? Coordinate;
 
             // Calculate the world position
             var position = CalculateWorldPosition(longestCell, gridTopLeftTr, targetCoordinate);
-            transform.position = position;
+
+            // Apply the position with or without animation
+            if (isAnimOn)
+            {
+                BoxCollider.enabled = false;
+                _gridPawnEffect.Shift(position, ()=>BoxCollider.enabled=true);
+            }
+            else
+            {
+                transform.position = position;
+            }
         }
 
         // Helper Method for Position Calculation

@@ -59,5 +59,10 @@ namespace MVP.Presenters.Handlers
                     return null;
             }
         }
+
+        public Appliance GenerateAppliance(ApplianceType producerGeneratedApplianceType, int level, Vector2Int closestCoord)
+        {
+            return _applianceFactory.GenerateAppliance(producerGeneratedApplianceType, level, closestCoord);
+        }
     }
 }
