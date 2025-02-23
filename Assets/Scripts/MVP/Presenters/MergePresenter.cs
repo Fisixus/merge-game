@@ -80,6 +80,8 @@ namespace MVP.Presenters
 
                     pawn.SetWorldPosition(oldPos, true, 0.3f);
                     _activePawn.SetWorldPosition(pawnPos, true, 0.3f);
+                    //_gridModel.SaveGrid();
+
                 }
             }
         }

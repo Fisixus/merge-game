@@ -25,11 +25,12 @@ namespace Core.Factories
         public Appliance GenerateAppliance(ApplianceType applianceType, int applianceLevel, Vector2Int applianceCoordinate)
         {
             var appliance = CreateObj();
-            appliance.SetAttributes(applianceCoordinate, applianceType, applianceLevel);
+            appliance.SetAttributes(applianceCoordinate, applianceType);
 
             if (ApplianceDataDict.TryGetValue(applianceType, out var applianceData) &&
                 applianceData.ApplianceLevelDataDict.TryGetValue(applianceLevel, out var levelData))
             {
+                appliance.SetLevels(applianceData.ApplianceLevelDataDict.Count, applianceLevel);
                 appliance.ApplyData(levelData);
             }
             else
@@ -51,7 +52,8 @@ namespace Core.Factories
         public override void DestroyObj(Appliance emptyItem)
         {
             base.DestroyObj(emptyItem);
-            emptyItem.SetAttributes(emptyItem.Coordinate, ApplianceType.None, 0);//TODO:
+            emptyItem.SetAttributes(emptyItem.Coordinate, ApplianceType.None);//TODO:
+            emptyItem.SetLevels(-1,-1);
             _allAppliances.Remove(emptyItem);
         }
 

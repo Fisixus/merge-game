@@ -7,7 +7,15 @@ namespace Core.GridPawns.Effect
     public class GridPawnEffect : MonoBehaviour
     {
         [field: SerializeField] public SpriteRenderer FocusSprite { get; private set; }
+        [field: SerializeField] public SpriteRenderer LastLevelSprite { get; private set; }
         private Tween _shiftTween;
+        
+        public void SetLastLevel(float scale)
+        {
+            LastLevelSprite.transform.DOKill();
+            LastLevelSprite.transform.DOScale(scale, 0.15f);
+        }
+        
         public void SetFocus(float scale)
         {
             transform.DOKill();

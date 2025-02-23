@@ -15,9 +15,21 @@ namespace Core.GridPawns
         [field: SerializeField] public GridPawnEffect PawnEffect { get; private set; }
         [field: SerializeField] public Vector2Int Coordinate { get; set; }
         
-        [field: SerializeField] public int Level { get;  set; }
         
         public abstract System.Enum Type { get; protected set; } // Enforced by derived classes to follow IType
+        
+        public int MaxLevel { get;  set; }
+
+        public int Level
+        {
+            get => _level;
+            private set
+            {
+                _level = value;
+                PawnEffect.SetLastLevel(MaxLevel == _level ? 1f : 0f);
+            }
+        }
+
         public bool IsEmpty
         {
             get => _isEmpty;
@@ -40,6 +52,7 @@ namespace Core.GridPawns
         }
 
         private bool _isEmpty;
+        private int _level;
 
         public void SetWorldPosition(Vector3 worldPos, bool isAnimOn = false, float animTime = 0.3f)
         {
@@ -99,16 +112,21 @@ namespace Core.GridPawns
         
 
         // SetAttributes, leveraging IType and polymorphism
-        public void SetAttributes(Vector2Int newCoord, System.Enum type, int level)
+        public void SetAttributes(Vector2Int newCoord, System.Enum type)
         {
             Coordinate = newCoord;
             Type = type;
-            Level = level;
             name = ToString();
             SetSortingOrder(-newCoord.y);
 
             // Update the GridAttributes
             IsEmpty = Type is ApplianceType.None or ProducerType.None;
+        }
+
+        public void SetLevels(int maxLevel, int level)
+        {
+            MaxLevel = maxLevel;
+            Level = level;
         }
 
         public void SetSortingOrder(int order)

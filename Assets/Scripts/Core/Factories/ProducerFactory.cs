@@ -26,11 +26,12 @@ namespace Core.Factories
         public Producer GenerateProducer(ProducerType producerType, int producerLevel, Vector2Int producerCoordinate)
         {
             var producer = CreateObj();
-            producer.SetAttributes(producerCoordinate, producerType, producerLevel);
+            producer.SetAttributes(producerCoordinate, producerType);
 
             if (ProducerDataDict.TryGetValue(producerType, out var producerData) &&
                 producerData.ProducerLevelDataDict.TryGetValue(producerLevel, out var levelData))
             {
+                producer.SetLevels(producerData.ProducerLevelDataDict.Count, producerLevel);
                 producer.ApplyData(levelData);
             }
             else
@@ -52,7 +53,8 @@ namespace Core.Factories
         public override void DestroyObj(Producer emptyItem)
         {
             base.DestroyObj(emptyItem);
-            emptyItem.SetAttributes(emptyItem.Coordinate, ProducerType.None, 0);
+            emptyItem.SetAttributes(emptyItem.Coordinate, ProducerType.None);
+            emptyItem.SetLevels(-1,-1);
             _allProducers.Remove(emptyItem);
         }
 
