@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4871253957025174992}
   - component: {fileID: 2540873680348613090}
+  - component: {fileID: 1896133904131409029}
   - component: {fileID: 7062835232851013564}
   - component: {fileID: 9024600619714824879}
   m_Layer: 0
@@ -172,6 +173,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1896133904131409029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839069635955970574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd40afb6d2cc0b43901e153466a1bf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <FocusSprite>k__BackingField: {fileID: 7245651664504749676}
+  <GlowEffect>k__BackingField: {fileID: 5484967510292707666}
 --- !u!114 &7062835232851013564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +201,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BoxCollider>k__BackingField: {fileID: 9024600619714824879}
   <SpriteRenderer>k__BackingField: {fileID: 2540873680348613090}
-  <FocusSprite>k__BackingField: {fileID: 7245651664504749676}
   <Coordinate>k__BackingField: {x: 0, y: 0}
   <Level>k__BackingField: 0
   <ApplianceType>k__BackingField: 0
@@ -307,5 +321,10 @@ PrefabInstance:
 --- !u!4 &808126580660499144 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8043573046740457295, guid: 1c2b159df87acc748b2faae81377633d, type: 3}
+  m_PrefabInstance: {fileID: 7248413610149340551}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5484967510292707666 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2920880288131243221, guid: 1c2b159df87acc748b2faae81377633d, type: 3}
   m_PrefabInstance: {fileID: 7248413610149340551}
   m_PrefabAsset: {fileID: 0}

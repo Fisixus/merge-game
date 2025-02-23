@@ -42,7 +42,7 @@ public partial class @IA_User: IInputActionCollection2, IDisposable
                     ""id"": ""55d1ed30-21b7-45c8-9491-f7c57fc612e5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap"",
+                    ""interactions"": ""MultiTap(tapDelay=0.5)"",
                     ""initialStateCheck"": false
                 },
                 {

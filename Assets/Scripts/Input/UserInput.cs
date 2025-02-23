@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.GridPawns;
+using Core.GridPawns.Effect;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -35,25 +36,46 @@ namespace Input
             _iaUser.Pawn.Drag.performed += OnDrag;
             //_iaUser.Match.Touch.performed += TouchItemNotifier; // Subscribe to the action
         }
-        
+
+        private void OnDisable()
+        {
+            _iaUser.Pawn.SingleTouch.performed -= OnSingleTouch;
+            _iaUser.Pawn.DoubleTouch.performed -= OnDoubleTouch;
+            _iaUser.Pawn.Release.performed -= OnRelease;
+            _iaUser.Pawn.Drag.performed -= OnDrag;
+        }
+
         private void GetPawn()
         {
             if (IsPointerOverUIObject() || !_isInputOn)
                 return;
             var hit = Physics2D.Raycast(_cam.ScreenToWorldPoint(UnityEngine.Input.mousePosition), Vector2.zero);
             if (hit && hit.transform.TryGetComponent<GridPawn>(out var gridPawn))
+            {
+                if(_activePawn != null) _activePawn.GetComponent<GridPawnEffect>().SetFocus(0f);
                 _activePawn = gridPawn;
-            else 
+            }
+            else
+            {
                 _activePawn = null;
+            } 
         }
         
         private void OnSingleTouch(InputAction.CallbackContext context)
         {
             GetPawn();
             if(_activePawn == null) return;
-            
+            _activePawn.GetComponent<GridPawnEffect>().SetFocus(1f);
             _isDragging = true;
-            _lastPosition = context.ReadValue<Vector2>();
+            // Check if input is from touchscreen or mouse
+            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+            {
+                _lastPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+            }
+            else if (Mouse.current != null && Mouse.current.leftButton.isPressed)
+            {
+                _lastPosition = Mouse.current.position.ReadValue();
+            }
             Debug.Log("Drag Started at: " + _lastPosition);
         }
 

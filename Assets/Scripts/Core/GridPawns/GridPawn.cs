@@ -10,7 +10,6 @@ namespace Core.GridPawns
     {
         [field: SerializeField] public BoxCollider2D BoxCollider { get; private set; }
         [field: SerializeField] public SpriteRenderer SpriteRenderer { get; private set; }
-        [field: SerializeField] public SpriteRenderer FocusSprite { get; private set; }
         [field: SerializeField] public Vector2Int Coordinate { get; set; }
         
         [field: SerializeField] public int Level { get;  set; }
