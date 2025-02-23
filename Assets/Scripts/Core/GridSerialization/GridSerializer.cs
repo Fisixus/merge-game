@@ -34,10 +34,11 @@ namespace Core.GridSerialization
                     {
                         JsonPawn pawn = new JsonPawn
                         {
-                            pawn_type = grid[i, j].ToString(),
+                            pawn_type = ConvertPawnTypeToJson(grid[i, j].Type).ToString(),
                             level = grid[i, j].Level
                         };
                         jsonPawn[i, j] = pawn;
+                        Debug.Log(pawn.level);
                     }
                 }
 
@@ -65,6 +66,7 @@ namespace Core.GridSerialization
             {
                 gridPawnLevels[i, j] = gridJson.grid[gridIndex].level;
                 gridPawnTypes[i, j] = ConvertJsonToPawnType(gridJson.grid[gridIndex].pawn_type);
+                Debug.Log(gridPawnTypes[i, j]);
                 gridIndex++;
             }
 
