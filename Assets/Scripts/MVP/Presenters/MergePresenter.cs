@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.GridEffects;
 using Core.GridPawns;
 using Core.GridPawns.Effect;
 using Core.Helpers;
@@ -14,13 +15,15 @@ namespace MVP.Presenters
     {
         private readonly IGridModel _gridModel;
         private readonly GridPawnFactoryHandler _gridPawnFactoryHandler;
+        private readonly DisappearEffectHandler _disappearEffectHandler;
         
         private GridPawn _activePawn;
 
-        public MergePresenter(IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler)
+        public MergePresenter(IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler, DisappearEffectHandler disappearEffectHandler)
         {
             _gridModel = gridModel;
             _gridPawnFactoryHandler = gridPawnFactoryHandler;
+            _disappearEffectHandler = disappearEffectHandler;
             
             UserInput.OnGridPawnSingleTouched += OnTouched;
             UserInput.OnGridPawnDoubleTouched += OnDoubleTouched;
@@ -124,6 +127,8 @@ namespace MVP.Presenters
         {
             _activePawn.PawnEffect.SetFocus(0);
             _activePawn = null;//TODO:
+            
+            _disappearEffectHandler.PlayDisappearEffect(producer.transform.position, ColorType.White).Forget();
             
             var newProducer = _gridPawnFactoryHandler.RecycleProducer(producer, newPosition);
             _gridModel.UpdateGridPawns(new List<GridPawn> { newProducer }, 

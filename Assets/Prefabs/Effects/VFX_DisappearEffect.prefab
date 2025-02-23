@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 3293168386914850563}
   - component: {fileID: 8216233181435995069}
   - component: {fileID: 4269377061802206394}
+  - component: {fileID: -2299257267681279917}
   m_Layer: 0
-  m_Name: VFX_Clouds
+  m_Name: VFX_DisappearEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4898,3 +4899,16 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-2299257267681279917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470765309097783433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf1cb1bcba1e8514eb5b5fec7c9dc0a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <DisappearParticleSystem>k__BackingField: {fileID: 8216233181435995069}

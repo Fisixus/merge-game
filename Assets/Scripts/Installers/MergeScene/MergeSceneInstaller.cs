@@ -1,5 +1,4 @@
 using DI;
-using Installers.LevelScene;
 using UnityEngine;
 
 namespace Installers.MergeScene
