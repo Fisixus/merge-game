@@ -1,18 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Core.GridPawns;
+using Input;
+using MVP.Models.Interface;
+using UnityEngine.SceneManagement;
 
-public class MergePresenter : MonoBehaviour
+namespace MVP.Presenters
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MergePresenter
     {
-        
-    }
+        private readonly IGridModel _gridModel;
+        private GridPawn _activePawn;
 
-    // Update is called once per frame
-    void Update()
-    {
+        public MergePresenter(IGridModel gridModel)
+        {
+            _gridModel = gridModel;
+            UserInput.OnGridPawnSingleTouched += OnTouched;
+            UserInput.OnGridPawnDoubleTouched += OnDoubleTouched;
+            UserInput.OnGridPawnReleased += OnReleased;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+        }
+        private void OnSceneUnloaded(Scene scene)
+        {
+            Dispose();
+        }
+
+        private void Dispose()
+        {
+            // Unsubscribe from static and instance events
+            UserInput.OnGridPawnSingleTouched -= OnTouched;
+            UserInput.OnGridPawnDoubleTouched -= OnDoubleTouched;
+            UserInput.OnGridPawnReleased -= OnReleased;
+
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        }
         
+        private void OnTouched(GridPawn touchedGridPawn)
+        {
+            _activePawn = touchedGridPawn;
+            _activePawn.SetSortingOrder(1000);
+        }
+        private void OnDoubleTouched()
+        {
+            if (_activePawn is Producer producer)
+            {
+                
+            }
+        }
+        private void OnReleased()
+        {
+            
+        }
     }
 }

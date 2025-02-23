@@ -19,8 +19,9 @@ namespace Input
 
         private static bool _isInputOn = true;
         public static event Action<GridPawn> OnGridPawnSingleTouched;
-        public static event Action<GridPawn> OnGridPawnDoubleTouched;
-        public static event Action<GridPawn> OnGridPawnReleased;
+        public static event Action OnGridPawnDoubleTouched;
+        public static event Action OnGridPawnReleased;
+        
         private IA_User _iaUser;
         
         private void Awake()
@@ -67,6 +68,8 @@ namespace Input
             if(_activePawn == null) return;
             _activePawn.GetComponent<GridPawnEffect>().SetFocus(1f);
             _isDragging = true;
+            OnGridPawnSingleTouched?.Invoke(_activePawn);
+            
             // Check if input is from touchscreen or mouse
             if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
             {
@@ -84,24 +87,35 @@ namespace Input
             if(_activePawn == null) return;
 
             _isDragging = false;
+            OnGridPawnReleased?.Invoke();
+
             Debug.Log("Drag Stopped.");
         }
 
         private void OnDrag(InputAction.CallbackContext context)
         {
-            if(_activePawn == null) return;
-            if (!_isDragging) return;
+            if (_activePawn == null || !_isDragging) return;
 
             Vector2 currentPosition = context.ReadValue<Vector2>();
-            Vector2 delta = currentPosition - _lastPosition;
 
-            Debug.Log($"Dragging... Delta: {delta}");
+            var pawnPos = _activePawn.transform.position;
+            Vector3 worldStart = _cam.ScreenToWorldPoint(new Vector3(_lastPosition.x, _lastPosition.y, pawnPos.z));
+            Vector3 worldCurrent = _cam.ScreenToWorldPoint(new Vector3(currentPosition.x, currentPosition.y, pawnPos.z));
+
+            Vector3 worldDelta = worldCurrent - worldStart;
+
+            // Move the active pawn
+            pawnPos += worldDelta;
+            _activePawn.transform.position = pawnPos;
+
             _lastPosition = currentPosition;
+            //Debug.Log($"Dragging... New Position: {_activePawn.transform.position}");
         }
 
         private void OnDoubleTouch(InputAction.CallbackContext context)
         {
             Debug.Log("Double Tap Detected!");
+            OnGridPawnDoubleTouched?.Invoke();
         }
         
         public static void SetInputState(bool isInputOn)
