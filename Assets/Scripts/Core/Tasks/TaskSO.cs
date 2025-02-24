@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Core.GridPawns.Enum;
 using UnityEngine;
 
 namespace Core.Tasks
@@ -7,7 +9,14 @@ namespace Core.Tasks
     {
         [field: SerializeField] public int TaskID { get; private set; }
         [field: SerializeField] public Texture CharTexture { get; private set; }
-        //TODO:Goals
+        [field: SerializeField] public List<Goal> Goals { get; private set; }
         //TODO:Reward for later steps
+    }
+
+    [System.Serializable]
+    public class Goal
+    {
+        [field: SerializeField] public ApplianceType ApplianceType { get; private set; }
+        [field: SerializeField] public int Level { get; private set; }
     }
 }
