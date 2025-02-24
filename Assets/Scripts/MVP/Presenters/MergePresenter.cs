@@ -90,7 +90,7 @@ namespace MVP.Presenters
             _activePawn.SetSortingOrder(_activeSortingOrder, "Pawns");
             _activePawn.PawnEffect.SetFocus(true);
 
-            var closestCoordinate = GridPositionHelper.FindClosestCoordinateAfterRelease(_activePawn.transform.position);
+            var closestCoordinate = GridPositionHelper.FindClosestCoordinateAfterRelease(_activePawn.transform.position, _activePawn.Coordinate);
             var oldPos = GridPositionHelper.GetWorldPositionFromCoordinate(_activePawn.Coordinate);
 
             if (closestCoordinate == null)

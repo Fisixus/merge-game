@@ -45,13 +45,14 @@ namespace Core.Helpers
         /// <summary>
         /// Finds the closest grid coordinate to the given release point if within a certain distance.
         /// </summary>
-        public static Vector2Int? FindClosestCoordinateAfterRelease(Vector3 releasePoint)
+        public static Vector2Int? FindClosestCoordinateAfterRelease(Vector3 releasePoint, Vector2Int selfCoordinate)
         {
             Vector2Int? closestCoord = null;
             float minDistance = MaxDistanceThreshold; // Start with threshold
 
             foreach (var kvp in CoordinateToWorldPosDict)
             {
+                if(kvp.Key == selfCoordinate) continue;
                 float distance = Vector3.Distance(kvp.Value, releasePoint);
                 //Debug.Log(distance);
                 if (distance < minDistance)
