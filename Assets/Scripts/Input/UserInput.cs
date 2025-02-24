@@ -23,6 +23,7 @@ namespace Input
         public static event Action OnGridPawnReleased;
         
         private IA_User _iaUser;
+        private bool _isDoubleClickedSamePawn;
         
         private void Awake()
         {
@@ -55,10 +56,8 @@ namespace Input
             return hit && hit.transform.TryGetComponent<GridPawn>(out var gridPawn) ? gridPawn : null;
         }
 
-        private void SetActivePawn()
+        private void SetActivePawn(GridPawn newPawn)
         {
-            var newPawn = GetPawnAtPointer();
-
             if (_activePawn != null)
                 _activePawn.PawnEffect.SetFocus(false);
 
@@ -67,24 +66,27 @@ namespace Input
         
         private void OnSingleTouch(InputAction.CallbackContext context)
         {
-            SetActivePawn();
-            if(_activePawn == null) return;
-            _activePawn.PawnEffect.SetFocus(true);
+            var newPawn = GetPawnAtPointer();
+            _isDoubleClickedSamePawn = (newPawn != null && newPawn.Equals(_activePawn));
 
+            SetActivePawn(newPawn);
+            if (_activePawn == null) return;
+
+            _activePawn.PawnEffect.SetFocus(true);
             _isDragging = true;
             OnGridPawnSingleTouched?.Invoke(_activePawn);
-            
-            // Check if input is from touchscreen or mouse
-            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+
+            //  Determine last touch position (Touchscreen or Mouse)
+            if (Touchscreen.current?.primaryTouch.press.isPressed == true)
             {
                 _lastPosition = Touchscreen.current.primaryTouch.position.ReadValue();
             }
-            else if (Mouse.current != null && Mouse.current.leftButton.isPressed)
+            else if (Mouse.current?.leftButton.isPressed == true)
             {
                 _lastPosition = Mouse.current.position.ReadValue();
             }
-            //Debug.Log("Drag Started at: " + _lastPosition);
         }
+
 
         private void OnRelease(InputAction.CallbackContext context)
         {
@@ -120,6 +122,7 @@ namespace Input
         private void OnDoubleTouch(InputAction.CallbackContext context)
         {
             //Debug.Log("Double Tap Detected!");
+            if(!_isDoubleClickedSamePawn) return;
             OnGridPawnDoubleTouched?.Invoke();
         }
         
