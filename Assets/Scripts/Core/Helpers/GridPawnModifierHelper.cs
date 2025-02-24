@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Core.Helpers
 {
-    public static class GridItemModifierHelper
+    public static class GridPawnModifierHelper
     {
         public static void SwapItems(GridPawn[,] grid, int x1, int y1, int x2, int y2)
         {

@@ -50,7 +50,6 @@ namespace MVP.Models
             if (_taskQueue.Count > 0)
             {
                 var task = _taskQueue.Dequeue();
-                Debug.Log(task.TaskID);
                 return task;
             }
 

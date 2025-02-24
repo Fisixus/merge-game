@@ -72,7 +72,7 @@ namespace MVP.Models
             var firstCoord = firstPawn.Coordinate;
         
             // Swap the pawns even if one is null (to move into an empty space)
-            GridItemModifierHelper.SwapItems(Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
+            GridPawnModifierHelper.SwapItems(Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
             SaveGrid();
 
         }

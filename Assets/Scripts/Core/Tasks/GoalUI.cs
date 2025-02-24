@@ -11,23 +11,23 @@ namespace Core.Tasks
         [field: SerializeField] public Image CheckImage { get; private set; }
         public Goal Goal { get;  set; }
         
-        
         private void OnEnable()
         {
             CheckImage.transform.localScale = Vector3.zero;
         }
         
-        public void SetCheckImage(bool isChecked)
+        public void SetCompletion(bool isCompleted)
         {
             CheckImage.transform.DOKill();
 
-            if (isChecked)
+            if (isCompleted)
             {
                 CheckImage.transform.DOScale(1f, 0.3f);
             }
             else
             {
-                CheckImage.transform.localScale = Vector3.zero;
+                CheckImage.transform.DOScale(0f, 0.3f);
+
             }
         }
         

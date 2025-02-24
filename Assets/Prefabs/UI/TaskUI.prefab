@@ -267,7 +267,7 @@ RectTransform:
   m_GameObject: {fileID: 3525779108286981257}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 788581713019388168}
@@ -275,7 +275,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 211, y: 124}
+  m_AnchoredPosition: {x: 124, y: -53}
   m_SizeDelta: {x: 350, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4746296134297766833
@@ -485,7 +485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <CharImage>k__BackingField: {fileID: 9082789727401557452}
   <DoneButton>k__BackingField: {fileID: 6524888016784046775}
-  <GoalUIs>k__BackingField:
+  <AllGoalUIs>k__BackingField:
   - {fileID: 5624176485602809470}
   - {fileID: 7092324054857568808}
   - {fileID: 5946299613675259679}

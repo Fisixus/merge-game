@@ -43,13 +43,14 @@ namespace MVP.Presenters
         public async UniTask LoadGrid()
         {
             // TODO: Addressable logic next step
-            _taskHandler.InitializeTasks();
             var gridInfo = _gridModel.GetGridInfo();
             Vector2Int gridSize = gridInfo?.GridSize ?? new Vector2Int(_gridModel.ColumnCount, _gridModel.RowCount);
 
             _gridView.CalculateGridSize(gridSize);
             _gridModel.LoadGrid(gridInfo);
 
+            _taskHandler.InitializeTasks(_gridModel.Grid);
+            
             // TODO: _goalHandler.Initialize(levelInfo.Goals, levelInfo.NumberOfMoves);
             _gridView.Scale(gridSize);
 

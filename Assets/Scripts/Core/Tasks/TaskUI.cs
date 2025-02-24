@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Core.GridPawns;
+using Core.GridPawns.Enum;
+using Core.Helpers;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,21 +14,26 @@ namespace Core.Tasks
         public int TaskID { get; set; }
         [field: SerializeField] public RawImage CharImage { get; set; }
         [field: SerializeField] public Button DoneButton { get; private set; }
-        [field: SerializeField] public List<GoalUI> GoalUIs { get; private set; }
+        [field: SerializeField] public List<GoalUI> AllGoalUIs { get; private set; }
         
-
-        private List<Appliance> _mergedAppliances = new List<Appliance>(4);
         private int _goalUIIndex;
-
+        private Dictionary<GoalUI, Appliance> _matchedAppliances; // ✅ Track matched pawns
+        
+        public List<GoalUI> ActiveGoals { get; private set; }
         private void OnEnable()
         {
             _goalUIIndex = 0;
             DoneButton.transform.localScale = Vector3.zero;
-            DoneButton.onClick.AddListener(OnCompleteTask);
-            foreach (var goalUI in GoalUIs)
+            
+            _matchedAppliances = new Dictionary<GoalUI, Appliance>();
+            ActiveGoals = new List<GoalUI>();
+            
+            foreach (var goalUI in AllGoalUIs)
             {
                 goalUI.gameObject.SetActive(false);
             }
+            
+            DoneButton.onClick.AddListener(OnCompleteTask);
             
             //TODO: Listen Merge has happened(CheckGoals)
         }
@@ -35,7 +42,7 @@ namespace Core.Tasks
         private void OnDisable()
         {
             DoneButton.onClick.RemoveListener(OnCompleteTask);
-            foreach (var goalUI in GoalUIs)
+            foreach (var goalUI in AllGoalUIs)
             {
                 goalUI.gameObject.SetActive(false);
             }
@@ -43,20 +50,44 @@ namespace Core.Tasks
             //TODO: Stop listening Merge has happened(CheckGoals)
         }
 
-        public void CheckGoals(Appliance mergedAppliance)
+        public void SetGoalUI(Goal goal, Sprite sprite)
         {
-            foreach (var goalUI in GoalUIs)
-            {
-                var type = goalUI.Goal.ApplianceType;
-                var level = goalUI.Goal.Level;
+            AllGoalUIs[_goalUIIndex].gameObject.SetActive(true);
+            var newGoal = new Goal();
+            newGoal.ApplianceType = goal.ApplianceType;
+            newGoal.Level = goal.Level;
+            AllGoalUIs[_goalUIIndex].Goal = newGoal;
+            AllGoalUIs[_goalUIIndex].GoalImage.sprite = sprite;
+            
+            ActiveGoals.Add(AllGoalUIs[_goalUIIndex++]);
+        }
 
-                if (mergedAppliance.ApplianceType == type && mergedAppliance.Level == level)
-                {
-                    goalUI.SetCheckImage(true);
-                    //TODO:mergedAppliance.ApplianceEffect.SetGlowing(true);
-                    _mergedAppliances.Add(mergedAppliance);
-                }
-                
+        public void MatchGoal(GoalUI goalUI, GridPawn pawn)
+        {
+            if (pawn is Appliance appliance)
+            {
+                _matchedAppliances[goalUI] = appliance; // ✅ Store valid match
+                goalUI.SetCompletion(true); // ✅ Mark goal as completed
+            }
+            else
+            {
+                _matchedAppliances.Remove(goalUI); // ✅ Remove invalid match
+                goalUI.SetCompletion(false); // ✅ Reset completion if no match is found
+            }
+
+            CheckAllGoalsCompleted(); // ✅ Recalculate if "Done" button should be visible
+        }
+
+
+        private void CheckAllGoalsCompleted()
+        {
+            if (_matchedAppliances.Count == ActiveGoals.Count)
+            {
+                SetDoneButton(true);
+            }
+            else
+            {
+                SetDoneButton(false);
             }
         }
 
@@ -67,18 +98,7 @@ namespace Core.Tasks
         }
         
 
-        public void SetGoalUI(Goal goal, Sprite sprite)
-        {
-            GoalUIs[_goalUIIndex].gameObject.SetActive(true);
-            var newGoal = new Goal();
-            newGoal.ApplianceType = goal.ApplianceType;
-            newGoal.Level = goal.Level;
-            GoalUIs[_goalUIIndex].Goal = newGoal;
-            GoalUIs[_goalUIIndex].GoalImage.sprite = sprite;
-            _goalUIIndex++;
-        }
-
-
+        
         public void SetDoneButton(bool isDone)
         {
             DoneButton.transform.DOKill();
@@ -89,7 +109,7 @@ namespace Core.Tasks
             }
             else
             {
-                DoneButton.transform.localScale = Vector3.zero;
+                DoneButton.transform.DOScale(0f, 0.3f);
             }
         }
         
