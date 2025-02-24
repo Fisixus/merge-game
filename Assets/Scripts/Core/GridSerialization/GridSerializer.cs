@@ -32,10 +32,12 @@ namespace Core.GridSerialization
                 {
                     for (int j = 0; j < rowCount; j++)
                     {
+                        var type = grid[i, j] is null ? ApplianceType.None : grid[i, j].Type; 
+                        var level = grid[i, j] is null ? -1 : grid[i, j].Level; 
                         JsonPawn pawn = new JsonPawn
                         {
-                            pawn_type = ConvertPawnTypeToJson(grid[i, j].Type).ToString(),
-                            level = grid[i, j].Level
+                            pawn_type = ConvertPawnTypeToJson(type).ToString(),
+                            level = level
                         };
                         jsonPawn[i, j] = pawn;
                     }

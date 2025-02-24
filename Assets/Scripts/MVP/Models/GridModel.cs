@@ -46,7 +46,7 @@ namespace MVP.Models
                     }
                 }
             }
-            //SaveGrid();
+            SaveGrid();
         }
 
         public void UpdateGridPawn(GridPawn gridPawn, bool isRemoving, Vector2Int? coordOverride = null, bool isAnimationOn = false, float animTime = 0f)
@@ -63,7 +63,7 @@ namespace MVP.Models
                 OnGridPawnUpdated?.Invoke(gridPawn, coordOverride, isAnimationOn, animTime);
             }
 
-            //SaveGrid();
+            SaveGrid();
         }
 
         
@@ -73,6 +73,8 @@ namespace MVP.Models
         
             // Swap the pawns even if one is null (to move into an empty space)
             GridItemModifierHelper.SwapItems(Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
+            SaveGrid();
+
         }
 
         public GridInfo GetGridInfo()
