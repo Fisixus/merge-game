@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core.GridPawns.Data;
+using Core.GridPawns.Effect;
 using Core.GridPawns.Enum;
 using UnityEngine;
 
@@ -15,7 +16,10 @@ namespace Core.GridPawns
         [field: SerializeField] public int Capacity { get; set; }
         [field: SerializeField] public ApplianceType GeneratedApplianceType { get; set; }
         
-        public Dictionary<int, float> GeneratingRatioDict { get; private set; }
+        // Override PawnEffect to return ProducerEffect
+        public new ProducerEffect PawnEffect => (ProducerEffect)base.PawnEffect;
+
+        private Dictionary<int, float> _generatingRatioDict { get; set; }
         private int _maxCapacity;
         
         private Coroutine _capacityCoroutine;
@@ -39,7 +43,7 @@ namespace Core.GridPawns
             Capacity = producerData.Capacity;
             _maxCapacity = Capacity;
             GeneratedApplianceType = producerData.GeneratedApplianceType;
-            GeneratingRatioDict = producerData.GeneratingRatioDict;
+            _generatingRatioDict = producerData.GeneratingRatioDict;
         }
         
         private void StartCapacityIncrease()
@@ -99,7 +103,7 @@ namespace Core.GridPawns
         /// <summary> Selects an appliance level to produce based on the probability ratios. </summary>
         public int GetApplianceLevelToProduce()
         {
-            if (GeneratingRatioDict == null || GeneratingRatioDict.Count == 0)
+            if (_generatingRatioDict == null || _generatingRatioDict.Count == 0)
             {
                 Debug.LogError("GeneratingRatioDict is empty! Returning default level 1.");
                 return 1; // Default level
@@ -108,7 +112,7 @@ namespace Core.GridPawns
             float randomValue = UnityEngine.Random.value; // Random float between 0.0 - 1.0
             float cumulativeProbability = 0f;
 
-            foreach (var kvp in GeneratingRatioDict)
+            foreach (var kvp in _generatingRatioDict)
             {
                 cumulativeProbability += kvp.Value;
 

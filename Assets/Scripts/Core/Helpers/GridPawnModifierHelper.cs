@@ -19,6 +19,6 @@ namespace Core.Helpers
             if (grid[x2, y2] != null)
                 grid[x2, y2].SetAttributes(new Vector2Int(x2, y2), grid[x2, y2].Type, grid[x2, y2].Level, grid[x2, y2].MaxLevel);
         }
-
+        
     }
 }

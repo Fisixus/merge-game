@@ -53,9 +53,11 @@ namespace Core.Tasks
         public void SetGoalUI(Goal goal, Sprite sprite)
         {
             AllGoalUIs[_goalUIIndex].gameObject.SetActive(true);
-            var newGoal = new Goal();
-            newGoal.ApplianceType = goal.ApplianceType;
-            newGoal.Level = goal.Level;
+            var newGoal = new Goal
+            {
+                ApplianceType = goal.ApplianceType,
+                Level = goal.Level
+            };
             AllGoalUIs[_goalUIIndex].Goal = newGoal;
             AllGoalUIs[_goalUIIndex].GoalImage.sprite = sprite;
             
@@ -66,16 +68,17 @@ namespace Core.Tasks
         {
             if (pawn is Appliance appliance)
             {
-                _matchedAppliances[goalUI] = appliance; // ✅ Store valid match
-                goalUI.SetCompletion(true); // ✅ Mark goal as completed
+                _matchedAppliances[goalUI] = appliance; // Store valid match
+                goalUI.SetCompletion(true); // Mark goal as completed
+                appliance.PawnEffect.SetGlowing(true);
             }
             else
             {
-                _matchedAppliances.Remove(goalUI); // ✅ Remove invalid match
-                goalUI.SetCompletion(false); // ✅ Reset completion if no match is found
+                _matchedAppliances.Remove(goalUI); // Remove invalid match
+                goalUI.SetCompletion(false); // Reset completion if no match is found
             }
 
-            CheckAllGoalsCompleted(); // ✅ Recalculate if "Done" button should be visible
+            CheckAllGoalsCompleted(); // Recalculate if "Done" button should be visible
         }
 
 
