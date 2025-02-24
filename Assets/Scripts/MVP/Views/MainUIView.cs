@@ -27,21 +27,22 @@ namespace MVP.Views
 
         private async UniTask RequestLevel()
         {
+            // Disable the button to prevent multiple clicks
+            PlayButton.interactable = false;
+
+            // Resolve dependencies
+            var scenePresenter = ProjectContext.Container.Resolve<ScenePresenter>();
+            var mergeTransitionHandler = ProjectContext.Container.Resolve<SceneTransitionHandler>();
+            // Perform scene transition
+            await scenePresenter.TransitionToNextScene("MergeScene",
+                async (container) =>
+                {
+                    // Specific setup logic for this scene
+                    await mergeTransitionHandler.SetupMergeSceneRequirements(container);
+                });
             try
             {
-                // Disable the button to prevent multiple clicks
-                PlayButton.interactable = false;
 
-                // Resolve dependencies
-                var scenePresenter = ProjectContext.Container.Resolve<ScenePresenter>();
-                var mergeTransitionHandler = ProjectContext.Container.Resolve<SceneTransitionHandler>();
-                // Perform scene transition
-                await scenePresenter.TransitionToNextScene("MergeScene",
-                    async (container) =>
-                    {
-                        // Specific setup logic for this scene
-                        await mergeTransitionHandler.SetupMergeSceneRequirements(container);
-                    });
             }
             catch (Exception e)
             {

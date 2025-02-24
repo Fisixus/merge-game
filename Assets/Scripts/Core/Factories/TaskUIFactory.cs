@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Core.Factories;
+using Core.Factories.Interface;
+using Core.Factories.Pools;
+using Core.Tasks;
 
-public class TaskUIFactory : MonoBehaviour
+public class TaskUIFactory : ObjectFactory<TaskUI>, ITaskUIFactory
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public override void PreInitialize()
     {
-        
+        Pool = new ObjectPool<TaskUI>(ObjPrefab, ParentTr, 4);
     }
 }

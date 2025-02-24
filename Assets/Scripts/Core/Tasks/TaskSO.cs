@@ -9,14 +9,9 @@ namespace Core.Tasks
     {
         [field: SerializeField] public int TaskID { get; private set; }
         [field: SerializeField] public Texture CharTexture { get; private set; }
+        //Max 3 per task recommended
         [field: SerializeField] public List<Goal> Goals { get; private set; }
         //TODO:Reward for later steps
     }
 
-    [System.Serializable]
-    public class Goal
-    {
-        [field: SerializeField] public ApplianceType ApplianceType { get; private set; }
-        [field: SerializeField] public int Level { get; private set; }
-    }
 }

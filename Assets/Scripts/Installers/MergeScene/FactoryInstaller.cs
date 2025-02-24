@@ -12,6 +12,7 @@ namespace Installers.MergeScene
         [SerializeField] private ProducerFactory _producerFactory;
         [SerializeField] private DisappearEffectFactory _disappearEffectFactory;
         [SerializeField] private MergeGlowEffectFactory _mergeGlowEffectFactory;
+        [SerializeField] private TaskUIFactory _taskUIFactory;
 
         protected override void InstallBindings()
         {
@@ -19,6 +20,7 @@ namespace Installers.MergeScene
             Container.BindAsSingle<IProducerFactory>(() => _producerFactory);
             Container.BindAsSingle<IDisappearEffectFactory>(() => _disappearEffectFactory);
             Container.BindAsSingle<IMergeGlowEffectFactory>(() => _mergeGlowEffectFactory);
+            Container.BindAsSingle<ITaskUIFactory>(() => _taskUIFactory);
         }
     }
 }

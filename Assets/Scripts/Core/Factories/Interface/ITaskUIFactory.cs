@@ -1,18 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Core.Tasks;
 
-public class ITaskUIFactory : MonoBehaviour
+namespace Core.Factories.Interface
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface ITaskUIFactory: IFactory<TaskUI>
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    
     }
 }

@@ -13,14 +13,14 @@ namespace MVP.Presenters
     public class GridPresenter
     {
         private readonly IGridModel _gridModel;
-        private readonly TaskHandler _taskHandler;
         private readonly IGridView _gridView;
+        private readonly TaskHandler _taskHandler;
         
-        public GridPresenter(IGridModel gridModel, TaskHandler taskHandler, IGridView gridView)
+        public GridPresenter(IGridModel gridModel, IGridView gridView, TaskHandler taskHandler)
         {
             _gridModel = gridModel;
-            _taskHandler = taskHandler;
             _gridView = gridView;
+            _taskHandler = taskHandler;
 
             _gridModel.OnGridCoordinateToWorldPosCalculated += GridCoordinateToWorldPosCalculated;
             _gridModel.OnGridPawnInitialized += GridPawnInitialized;
@@ -43,6 +43,7 @@ namespace MVP.Presenters
         public async UniTask LoadGrid()
         {
             // TODO: Addressable logic next step
+            _taskHandler.InitializeTasks();
             var gridInfo = _gridModel.GetGridInfo();
             Vector2Int gridSize = gridInfo?.GridSize ?? new Vector2Int(_gridModel.ColumnCount, _gridModel.RowCount);
 

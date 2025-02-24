@@ -8,28 +8,31 @@ namespace MVP.Models
 {
     public class TaskModel : ITaskModel
     {
-        private List<TaskSO> _allTasks;  // All available tasks
-        private List<int> _completedTaskIDs; // Only store IDs of completed tasks
+        private Queue<TaskSO> _taskQueue;  // Queue to store available tasks
+        private List<int> _completedTaskIDs; // Store IDs of completed tasks
 
         public TaskModel()
         {
             LoadTasks();
         }
-        
+
         private void LoadTasks()
         {
             // Load all available tasks from Resources
-            _allTasks = Resources.LoadAll<TaskSO>("Tasks").ToList();
+            var allTasks = Resources.LoadAll<TaskSO>("Tasks").ToList();
 
             // Load completed task IDs from PlayerPrefs
             _completedTaskIDs = LoadCompletedTasks();
 
-            // Remove completed tasks from allTasks
-            _allTasks = _allTasks.Where(task => !_completedTaskIDs.Contains(task.TaskID)).ToList();
+            // Filter out completed tasks and order by TaskID
+            var remainingTasks = allTasks
+                .Where(task => !_completedTaskIDs.Contains(task.TaskID))
+                .OrderBy(task => task.TaskID); // Sort by TaskID
+            // Initialize queue with remaining tasks
+            _taskQueue = new Queue<TaskSO>(remainingTasks);
 
-            Debug.Log($"Loaded Tasks: {_allTasks.Count}, Completed Tasks: {_completedTaskIDs.Count}");
+            Debug.Log($"Loaded Tasks: {_taskQueue.Count}, Completed Tasks: {_completedTaskIDs.Count}");
         }
-        
 
         public void CompleteTask(int taskID)
         {
@@ -37,12 +40,21 @@ namespace MVP.Models
             {
                 _completedTaskIDs.Add(taskID);
                 SaveCompletedTasks();
-
-                // Remove completed task from `allTasks`
-                _allTasks = _allTasks.Where(task => !_completedTaskIDs.Contains(task.TaskID)).ToList();
-
-                Debug.Log($"Task {taskID} completed! Remaining Tasks: {_allTasks.Count}");
+                
+                Debug.Log($"Task {taskID} completed! Remaining Tasks: {_taskQueue.Count}");
             }
+        }
+
+        public TaskSO GetNextTask()
+        {
+            if (_taskQueue.Count > 0)
+            {
+                var task = _taskQueue.Dequeue();
+                Debug.Log(task.TaskID);
+                return task;
+            }
+
+            return null;
         }
 
         private void SaveCompletedTasks()
@@ -57,14 +69,7 @@ namespace MVP.Models
             if (!PlayerPrefs.HasKey("CompletedTasks")) return new List<int>();
 
             string json = PlayerPrefs.GetString("CompletedTasks");
-            return json.Split(',').Select(int.Parse).ToList();
+            return json.Split(',').Where(s => !string.IsNullOrEmpty(s)).Select(int.Parse).ToList();
         }
-
-        // public void ResetTasks()
-        // {
-        //     _completedTaskIDs.Clear();
-        //     PlayerPrefs.DeleteKey("CompletedTasks");
-        //     LoadTasks();
-        // }
     }
 }
