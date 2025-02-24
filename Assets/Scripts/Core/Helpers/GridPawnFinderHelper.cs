@@ -1,6 +1,7 @@
 using System;
 using Core.GridPawns;
 using Core.GridPawns.Enum;
+using UnityEngine;
 
 namespace Core.Helpers
 {
@@ -16,6 +17,7 @@ namespace Core.Helpers
                 for (int y = 0; y < rowCount; y++)
                 {
                     GridPawn pawn = grid[x, y]; 
+                    //Debug.Log(pawn);
                     if (pawn != null && pawn.Type.Equals(type) && pawn.Level == level)
                     {
                         return pawn; //  Return first match found

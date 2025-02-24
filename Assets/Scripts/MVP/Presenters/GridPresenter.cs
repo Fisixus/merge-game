@@ -1,5 +1,6 @@
 using System;
 using Core.GridPawns;
+using Core.GridSerialization;
 using Core.Helpers;
 using Cysharp.Threading.Tasks;
 using MVP.Models.Interface;
@@ -53,13 +54,12 @@ namespace MVP.Presenters
         }
 
 
-        // public void LoadFromGridEditor(LevelInfo levelInfo)
-        // {
-        //     _gridView.CalculateGridSize(levelInfo.GridSize);
-        //     _levelSetupHandler.Initialize(levelInfo);
-        //     _goalHandler.Initialize(levelInfo.Goals, levelInfo.NumberOfMoves);
-        //     _gridView.Scale(levelInfo.GridSize);
-        // }
+        public void LoadFromGridEditor(GridInfo gridInfo)
+        {
+            _gridView.CalculateGridSize(gridInfo.GridSize);
+            _gridModel.LoadGrid(gridInfo);
+            _gridView.Scale(gridInfo.GridSize);
+        }
 
         private void GridCoordinateToWorldPosCalculated(Vector2Int coord)
         {

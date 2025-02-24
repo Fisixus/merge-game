@@ -64,12 +64,12 @@ namespace MVP.Presenters
             }
 
             DestroyAppliances(appliancesToDestroy);
-            UpdateTasks();
             await AnimateCompletedTask(taskToComplete);
             _activeTasks.Remove(taskToComplete);
             _taskUIFactory.DestroyObj(taskToComplete);
             _taskModel.CompleteTask(taskID);
             LoadNextTask().Forget();
+            UpdateTasks();
         }
 
         private async UniTask AnimateCompletedTask(TaskUI completedTask, float animDuration = 0.3f)

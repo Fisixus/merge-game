@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DI
 {
@@ -20,24 +18,7 @@ namespace DI
 
             for (int i = 0; i < parameters.Length; i++)
             {
-                var paramType = parameters[i].ParameterType;
-
-                // Handle IEnumerable<T> directly in Construct
-                if (paramType.IsGenericType && paramType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                {
-                    var elementType = paramType.GetGenericArguments()[0];
-                    var resolvedObjects = container.ResolveAll(elementType);
-                    // Convert IEnumerable<object> to IEnumerable<T>
-                    var castMethod = typeof(Enumerable)
-                        .GetMethod(nameof(Enumerable.Cast))
-                        ?.MakeGenericMethod(elementType);
-
-                    args[i] = castMethod?.Invoke(null, new object[] { resolvedObjects });
-                }
-                else
-                {
-                    args[i] = container.Resolve(paramType);
-                }
+                args[i] = container.Resolve(parameters[i].ParameterType);
             }
 
             return (T)ctor.Invoke(args);

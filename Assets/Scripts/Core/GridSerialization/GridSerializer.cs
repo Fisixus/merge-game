@@ -79,7 +79,7 @@ namespace Core.GridSerialization
             {
                 case nameof(JsonGridPawnType.empty):
                     return ApplianceType.None;
-                case nameof(JsonGridPawnType.productA):
+                case nameof(JsonGridPawnType.applianceA):
                     return ApplianceType.ApplianceA;
                 case nameof(JsonGridPawnType.producerA):
                     return ProducerType.ProducerA;
@@ -93,7 +93,7 @@ namespace Core.GridSerialization
             switch (gridPawnType)
             {
                 case ApplianceType.ApplianceA:
-                    return JsonGridPawnType.productA;
+                    return JsonGridPawnType.applianceA;
                 case ProducerType.ProducerA:
                     return JsonGridPawnType.producerA;
                 default:
@@ -120,6 +120,22 @@ namespace Core.GridSerialization
             }
             return gridJson;
         }
-        
+
+        public static JsonPawn[,] ConvertToJsonPawn(Enum[,] gridInfoGridPawnTypes, int[,] gridInfoGridPawnLevels)
+        {
+            JsonPawn[,] jsonPawns = new JsonPawn[gridInfoGridPawnTypes.GetLength(0), gridInfoGridPawnTypes.GetLength(1)];
+            for (int i = 0; i < jsonPawns.GetLength(0); i++)
+            for (int j = 0; j < jsonPawns.GetLength(1); j++)
+            {
+                JsonPawn jsonPawn = new JsonPawn
+                {
+                    pawn_type = ConvertPawnTypeToJson(gridInfoGridPawnTypes[i,j]).ToString(),
+                    level = gridInfoGridPawnLevels[i, j]
+                };
+                jsonPawns[i, j] = jsonPawn;
+            }
+
+            return jsonPawns;
+        }
     }
 }

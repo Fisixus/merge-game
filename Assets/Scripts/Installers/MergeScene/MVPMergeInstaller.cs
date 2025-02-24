@@ -16,7 +16,7 @@ namespace Installers.MergeScene
 
         protected override void InstallBindings()
         {
-            Container.BindAsSingle<IGridModel>(() => Container.Construct<GridModel>());
+            Container.BindAsSingleNonLazy<IGridModel>(() => Container.Construct<GridModel>());
             Container.BindAsSingle<ITaskModel>(() => Container.Construct<TaskModel>());
             Container.BindAsSingle<IGridView>(() => _gridView);
             Container.BindAsSingle<IMergeUIView>(() => _mergeUIView);

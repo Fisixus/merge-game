@@ -3,7 +3,7 @@ namespace Core.GridSerialization
     public enum JsonGridPawnType
     {
         empty,
-        productA,
+        applianceA,
         producerA
     }
 }
