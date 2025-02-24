@@ -14,13 +14,11 @@ namespace MVP.Presenters
     {
         private readonly IGridModel _gridModel;
         private readonly IGridView _gridView;
-        private readonly TaskHandler _taskHandler;
         
-        public GridPresenter(IGridModel gridModel, IGridView gridView, TaskHandler taskHandler)
+        public GridPresenter(IGridModel gridModel, IGridView gridView)
         {
             _gridModel = gridModel;
             _gridView = gridView;
-            _taskHandler = taskHandler;
 
             _gridModel.OnGridCoordinateToWorldPosCalculated += GridCoordinateToWorldPosCalculated;
             _gridModel.OnGridPawnInitialized += GridPawnInitialized;
@@ -49,12 +47,9 @@ namespace MVP.Presenters
             _gridView.CalculateGridSize(gridSize);
             _gridModel.LoadGrid(gridInfo);
 
-            _taskHandler.InitializeTasks(_gridModel.Grid);
-            
-            // TODO: _goalHandler.Initialize(levelInfo.Goals, levelInfo.NumberOfMoves);
             _gridView.Scale(gridSize);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), DelayType.DeltaTime);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), DelayType.DeltaTime);
         }
 
 

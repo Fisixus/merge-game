@@ -14,7 +14,7 @@ namespace MVP.Presenters
 {
     public class MergePresenter
     {
-        private readonly TaskHandler _taskHandler;
+        private readonly TaskPresenter _taskPresenter;
         private readonly IGridModel _gridModel;
         private readonly GridPawnFactoryHandler _gridPawnFactoryHandler;
         private readonly DisappearEffectHandler _disappearEffectHandler;
@@ -23,10 +23,10 @@ namespace MVP.Presenters
         private GridPawn _activePawn;
         private int _activeSortingOrder;
 
-        public MergePresenter(TaskHandler taskHandler, IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler, 
+        public MergePresenter(TaskPresenter taskPresenter, IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler, 
             DisappearEffectHandler disappearEffectHandler, MergeGlowEffectHandler mergeGlowEffectHandler)
         {
-            _taskHandler = taskHandler;
+            _taskPresenter = taskPresenter;
             _gridModel = gridModel;
             _gridPawnFactoryHandler = gridPawnFactoryHandler;
             _disappearEffectHandler = disappearEffectHandler;
@@ -163,7 +163,7 @@ namespace MVP.Presenters
             _activePawn.PawnEffect.SetFocus(false);
             _activePawn = newPawn;
 
-            _taskHandler.UpdateTasks();
+            _taskPresenter.UpdateTasks();
         }
 
 

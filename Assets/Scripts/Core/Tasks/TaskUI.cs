@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.GridPawns;
 using Core.GridPawns.Enum;
 using Core.Helpers;
 using DG.Tweening;
+using MVP.Presenters;
+using MVP.Presenters.Handlers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,14 +15,16 @@ namespace Core.Tasks
     public class TaskUI : MonoBehaviour
     {
         public int TaskID { get; set; }
+        [field: SerializeField] public CanvasGroup CanvasGroup { get; private set; }
         [field: SerializeField] public RawImage CharImage { get; set; }
         [field: SerializeField] public Button DoneButton { get; private set; }
         [field: SerializeField] public List<GoalUI> AllGoalUIs { get; private set; }
         
         private int _goalUIIndex;
-        private Dictionary<GoalUI, Appliance> _matchedAppliances; // ✅ Track matched pawns
+        private Dictionary<GoalUI, Appliance> _matchedAppliances; // Track matched pawns
         
         public List<GoalUI> ActiveGoals { get; private set; }
+        
         private void OnEnable()
         {
             _goalUIIndex = 0;
@@ -32,22 +37,20 @@ namespace Core.Tasks
             {
                 goalUI.gameObject.SetActive(false);
             }
-            
-            DoneButton.onClick.AddListener(OnCompleteTask);
-            
-            //TODO: Listen Merge has happened(CheckGoals)
         }
-
 
         private void OnDisable()
         {
-            DoneButton.onClick.RemoveListener(OnCompleteTask);
             foreach (var goalUI in AllGoalUIs)
             {
                 goalUI.gameObject.SetActive(false);
             }
-
-            //TODO: Stop listening Merge has happened(CheckGoals)
+            DoneButton.onClick.RemoveAllListeners();
+        }
+        
+        public void SubscribeDoneButton(TaskPresenter taskPresenter)
+        {
+            DoneButton.onClick.AddListener(async () => await taskPresenter.CompleteTask(TaskID, _matchedAppliances.Values.ToList()));
         }
 
         public void SetGoalUI(Goal goal, Sprite sprite)
@@ -80,8 +83,6 @@ namespace Core.Tasks
 
             CheckAllGoalsCompleted(); // Recalculate if "Done" button should be visible
         }
-
-
         private void CheckAllGoalsCompleted()
         {
             if (_matchedAppliances.Count == ActiveGoals.Count)
@@ -93,16 +94,8 @@ namespace Core.Tasks
                 SetDoneButton(false);
             }
         }
-
-        private void OnCompleteTask()
-        {
-            //TODO: Destroy mergedAppliances only goals though
-            //
-        }
         
-
-        
-        public void SetDoneButton(bool isDone)
+        private void SetDoneButton(bool isDone)
         {
             DoneButton.transform.DOKill();
 

@@ -11,7 +11,6 @@ namespace Installers.MergeScene
             Container.BindAsSingle(() => Container.Construct<GridPawnFactoryHandler>());
             Container.BindAsSingle(() => Container.Construct<DisappearEffectHandler>());
             Container.BindAsSingle(() => Container.Construct<MergeGlowEffectHandler>());
-            Container.BindAsSingle(() => Container.Construct<TaskHandler>());
             
         }
     }

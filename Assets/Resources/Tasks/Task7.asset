@@ -16,4 +16,4 @@ MonoBehaviour:
   <CharTexture>k__BackingField: {fileID: 2800000, guid: 1a6157d439d890f4e9d527eb77683710, type: 3}
   <Goals>k__BackingField:
   - <ApplianceType>k__BackingField: 1
-    <Level>k__BackingField: 7
+    <Level>k__BackingField: 8

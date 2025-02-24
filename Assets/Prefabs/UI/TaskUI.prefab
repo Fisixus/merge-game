@@ -442,6 +442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3881799319129139539}
   - component: {fileID: 7595475231101084622}
+  - component: {fileID: 2211027540264444077}
   m_Layer: 5
   m_Name: TaskUI
   m_TagString: Untagged
@@ -483,12 +484,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6b8c27990a188d44bdcba826923f126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <CanvasGroup>k__BackingField: {fileID: 2211027540264444077}
   <CharImage>k__BackingField: {fileID: 9082789727401557452}
   <DoneButton>k__BackingField: {fileID: 6524888016784046775}
   <AllGoalUIs>k__BackingField:
   - {fileID: 5624176485602809470}
   - {fileID: 7092324054857568808}
   - {fileID: 5946299613675259679}
+--- !u!225 &2211027540264444077
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7034735270018072568}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1221977218111946406
 PrefabInstance:
   m_ObjectHideFlags: 0
