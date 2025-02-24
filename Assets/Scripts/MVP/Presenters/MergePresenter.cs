@@ -4,6 +4,7 @@ using Core.GridPawns;
 using Core.GridPawns.Effect;
 using Core.Helpers;
 using Input;
+using JetBrains.Annotations;
 using MVP.Models.Interface;
 using MVP.Presenters.Handlers;
 using UnityEngine;
@@ -58,7 +59,7 @@ namespace MVP.Presenters
     
             _activePawn = touchedGridPawn;
             _activeSortingOrder = _activePawn.SpriteRenderer.sortingOrder;
-            _activePawn.SetSortingOrder(1000, "UI"); // TODO: Ensure sorting logic is correct
+            _activePawn.SetSortingOrder(1000, "UI");
 
             if (ShouldDestroy(_activePawn))
             {
@@ -74,7 +75,7 @@ namespace MVP.Presenters
         {
             _disappearEffectHandler.PlayDisappearEffect(pawn.transform.position, ColorType.White).Forget();
             _gridPawnFactoryHandler.DestroyPawn(pawn);
-            _gridModel.UpdateGridPawns(new List<GridPawn> { pawn }, null, false);
+            _gridModel.UpdateGridPawn(pawn, true);
 
             pawn.PawnEffect.SetFocus(false);
             _activePawn = null;
@@ -94,31 +95,45 @@ namespace MVP.Presenters
                 ResetPawnPosition(oldPos);
                 return;
             }
-
+            
+            
+            var snappingWorldPosition = GridPositionHelper.GetWorldPositionFromCoordinate(closestCoordinate.Value);
             var targetPawn = _gridModel.Grid[closestCoordinate.Value.x, closestCoordinate.Value.y];
-    
-            if (targetPawn.Equals(_activePawn)) return;
+            if (targetPawn == null)
+            {
+                SwapPawns(closestCoordinate.Value, oldPos, snappingWorldPosition);
+            }
+            else
+            {
+                if(targetPawn.Equals(_activePawn)) return;
+                if (CanMergeWith(targetPawn))
+                {
+                    MergePawns(targetPawn);
+                }
+                else
+                {
+                    SwapPawns(closestCoordinate.Value, oldPos, snappingWorldPosition); 
+                }
+            }
+            
 
-            HandlePawnInteraction(targetPawn, oldPos);
+        }
+        
+        private void SwapPawns(Vector2Int targetCoord,  Vector3 oldPos, Vector3 targetPos)
+        {
+            if (_activePawn == null) return; // No active pawn to swap
+
+            var targetPawn = _gridModel.Grid[targetCoord.x, targetCoord.y]; // Get the target pawn safely
+
+            targetPawn?.SetWorldPosition(oldPos, true, 0.3f); // If non-null, update position
+            _activePawn.SetWorldPosition(targetPos, true, 0.3f); // Always move _activePawn
+            _gridModel.SwapGridItems(_activePawn, targetCoord);
+
         }
 
         private void ResetPawnPosition(Vector3 position)
         {
             _activePawn.SetWorldPosition(position, true, 0.3f);
-        }
-
-        private void HandlePawnInteraction(GridPawn targetPawn, Vector3 oldPos)
-        {
-            var targetPos = GridPositionHelper.GetWorldPositionFromCoordinate(targetPawn.Coordinate);
-
-            if (CanMergeWith(targetPawn))
-            {
-                MergePawns(targetPawn);
-            }
-            else
-            {
-                SwapPawns(targetPawn, oldPos, targetPos);
-            }
         }
 
         private bool CanMergeWith(GridPawn targetPawn)
@@ -132,21 +147,16 @@ namespace MVP.Presenters
         {
             var newPawn = _gridPawnFactoryHandler.MergePawns(_activePawn, targetPawn);
             newPawn.PawnEffect.SetFocus(true);
+            _gridModel.UpdateGridPawn(_activePawn, true);
+            _gridModel.UpdateGridPawn(targetPawn, true);
+            _gridModel.UpdateGridPawn(newPawn, false, null, false);
             
-            _gridModel.UpdateGridPawns(new List<GridPawn> { newPawn }, null, false);
             _mergeGlowEffectHandler.PlayMergeGlowEffect(newPawn.transform.position, ColorType.Blue).Forget();
             
             _activePawn.PawnEffect.SetFocus(false);
             _activePawn = newPawn;
         }
 
-        private void SwapPawns(GridPawn targetPawn, Vector3 oldPos, Vector3 targetPos)
-        {
-            _gridModel.SwapGridItems(_activePawn, targetPawn);
-
-            targetPawn.SetWorldPosition(oldPos, true, 0.3f);
-            _activePawn.SetWorldPosition(targetPos, true, 0.3f);
-        }
 
         private void OnDoubleTouched()
         {
@@ -170,7 +180,7 @@ namespace MVP.Presenters
             int level = producer.GetApplianceLevelToProduce();
             var appliance = _gridPawnFactoryHandler.GenerateAppliance(producer.GeneratedApplianceType, level, emptyCoord);
     
-            _gridModel.UpdateGridPawns(new List<GridPawn> { appliance }, _activePawn.Coordinate, true, 0.3f);
+            _gridModel.UpdateGridPawn(appliance, false, _activePawn.Coordinate, true, 0.3f);
             producer.ReduceCapacity();
         }
 
@@ -190,7 +200,8 @@ namespace MVP.Presenters
             _disappearEffectHandler.PlayDisappearEffect(producer.transform.position, ColorType.White).Forget();
             
             var newProducer = _gridPawnFactoryHandler.RecycleProducer(producer, newPosition);
-            _gridModel.UpdateGridPawns(new List<GridPawn> { newProducer }, 
+            _gridModel.UpdateGridPawn(producer, true);
+            _gridModel.UpdateGridPawn(newProducer, false,
                 new Vector2Int(newPosition.x, newPosition.y - _gridModel.ColumnCount), true, 0.7f);
         }
 

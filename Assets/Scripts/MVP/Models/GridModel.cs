@@ -4,6 +4,7 @@ using Core.GridPawns;
 using Core.GridPawns.Enum;
 using Core.GridSerialization;
 using Core.Helpers;
+using JetBrains.Annotations;
 using MVP.Models.Interface;
 using MVP.Presenters.Handlers;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace MVP.Models
         public int ColumnCount { get; private set; }
         public int RowCount { get; private set; }
         
+        public event Action<Vector2Int> OnGridCoordinateToWorldPosCalculated;
         public event Action<GridPawn> OnGridPawnInitialized;
         public event Action<GridPawn, Vector2Int?, bool, float> OnGridPawnUpdated;
 
@@ -28,31 +30,49 @@ namespace MVP.Models
         private void Initialize(List<GridPawn> gridObjs)
         {
             Grid = new GridPawn[ColumnCount, RowCount];
+
             for (var i = 0; i < ColumnCount; i++)
-            for (var j = 0; j < RowCount; j++)
             {
-                Grid[i, j] = gridObjs[i * RowCount + j];
-                OnGridPawnInitialized?.Invoke(Grid[i, j]);
+                for (var j = 0; j < RowCount; j++)
+                {
+                    var index = i * RowCount + j;
+
+                    Grid[i, j] = gridObjs[index];
+                    OnGridCoordinateToWorldPosCalculated?.Invoke(new Vector2Int(i, j));
+
+                    if (Grid[i, j] != null)
+                    {
+                        OnGridPawnInitialized?.Invoke(Grid[i, j]);
+                    }
+                }
             }
             //SaveGrid();
         }
-        public void UpdateGridPawns(List<GridPawn> newGridPawns, Vector2Int? coordOverride, bool isAnimationOn, float animTime)
+
+        public void UpdateGridPawn(GridPawn gridPawn, bool isRemoving, Vector2Int? coordOverride = null, bool isAnimationOn = false, float animTime = 0f)
         {
-            foreach (var newGridPawn in newGridPawns)
+            if (gridPawn == null) return; // Ensure gridPawn is valid
+
+            var coord = gridPawn.Coordinate;
+
+            // Update the grid based on whether we are removing or setting a new pawn
+            Grid[coord.x, coord.y] = isRemoving ? null : gridPawn;
+
+            if (!isRemoving)
             {
-                //Debug.Log(newGridPawn);
-                Grid[newGridPawn.Coordinate.x, newGridPawn.Coordinate.y] = newGridPawn;
-                OnGridPawnUpdated?.Invoke(newGridPawn, coordOverride, isAnimationOn, animTime);
+                OnGridPawnUpdated?.Invoke(gridPawn, coordOverride, isAnimationOn, animTime);
             }
+
             //SaveGrid();
         }
+
         
-        public void SwapGridItems(GridPawn firstPawn, GridPawn secondPawn)
+        public void SwapGridItems(GridPawn firstPawn, Vector2Int secondCoord)
         {
             var firstCoord = firstPawn.Coordinate;
-            var secondCoord = secondPawn.Coordinate;
+        
+            // Swap the pawns even if one is null (to move into an empty space)
             GridItemModifierHelper.SwapItems(Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
-            //SaveGrid();
         }
 
         public GridInfo GetGridInfo()

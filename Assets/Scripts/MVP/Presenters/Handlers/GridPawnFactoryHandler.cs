@@ -31,10 +31,7 @@ namespace MVP.Presenters.Handlers
 
                     // Encapsulated factory logic
                     var gridPawn = CreateGridPawn(gridType, pawnLevel, coordinate);
-                    if (gridPawn != null)
-                    {
-                        gridPawns.Add(gridPawn);
-                    }
+                    gridPawns.Add(gridPawn);
                 }
             }
         }

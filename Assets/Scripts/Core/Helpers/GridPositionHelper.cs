@@ -75,7 +75,7 @@ namespace Core.Helpers
             {
                 for (int y = 0; y < rowCount; y++)
                 {
-                    if (grid[x, y].IsEmpty)
+                    if (grid[x, y] == null)
                     {
                         emptyCoordinates.Add(new Vector2Int(x, y));
                     }
@@ -125,7 +125,7 @@ namespace Core.Helpers
                     {
                         visited.Add(next);
 
-                        if (grid[next.x, next.y].IsEmpty)
+                        if (grid[next.x, next.y] == null)
                         {
                             return next; // Return first found empty cell
                         }

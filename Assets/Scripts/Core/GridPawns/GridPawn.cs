@@ -29,29 +29,7 @@ namespace Core.GridPawns
                 PawnEffect.SetLastLevel(MaxLevel == _level);
             }
         }
-
-        public bool IsEmpty
-        {
-            get => _isEmpty;
-            set
-            {
-                _isEmpty = value;
-                if (_isEmpty)
-                {
-                    // If empty, adjust other properties accordingly
-                    SpriteRenderer.enabled = false;
-                    BoxCollider.enabled = false;
-                }
-                else
-                {
-                    // If not empty, adjust properties oppositely
-                    SpriteRenderer.enabled = true;
-                    BoxCollider.enabled = true;
-                }
-            }
-        }
-
-        private bool _isEmpty;
+        
         private int _level;
 
         public void SetWorldPosition(Vector3 worldPos, bool isAnimOn = false, float animTime = 0.3f)
@@ -112,22 +90,15 @@ namespace Core.GridPawns
         
 
         // SetAttributes, leveraging IType and polymorphism
-        public void SetAttributes(Vector2Int newCoord, System.Enum type)
+        public void SetAttributes(Vector2Int newCoord, System.Enum type, int level, int maxLevel)
         {
             Coordinate = newCoord;
             Type = type;
-            name = ToString();
-            SetSortingOrder(-newCoord.y, "Pawns");
-
-            // Update the GridAttributes
-            IsEmpty = Type is ApplianceType.None or ProducerType.None;
-        }
-
-        public void SetLevels(int maxLevel, int level)
-        {
             MaxLevel = maxLevel;
             Level = level;
             name = ToString();
+            SetSortingOrder(-newCoord.y, "Pawns");
+
         }
 
         public void SetSortingOrder(int order, string layerName)

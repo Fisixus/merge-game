@@ -14,11 +14,12 @@ namespace MVP.Models.Interface
         GridInfo GetGridInfo();
         void LoadGrid(GridInfo gridInfo);
         void SaveGrid();
+        event Action<Vector2Int> OnGridCoordinateToWorldPosCalculated;
         event Action<GridPawn> OnGridPawnInitialized;
         event Action<GridPawn, Vector2Int?, bool, float> OnGridPawnUpdated;
 
-        void UpdateGridPawns(List<GridPawn> gridPawns, Vector2Int? coordOverride, bool isAnimOn = false, float animTime = 0.3f);
+        void UpdateGridPawn(GridPawn newGridPawn, bool isRemoving, Vector2Int? coordOverride = null, bool isAnimOn = false, float animTime = 0.3f);
 
-        void SwapGridItems(GridPawn firstPawn, GridPawn secondPawn);
+        void SwapGridItems(GridPawn firstPawn, Vector2Int secondCoord);
     }
 }

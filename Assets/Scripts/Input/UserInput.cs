@@ -46,25 +46,28 @@ namespace Input
             _iaUser.Pawn.Drag.performed -= OnDrag;
         }
 
-        private void GetPawn()
+        private GridPawn GetPawnAtPointer()
         {
             if (IsPointerOverUIObject() || !_isInputOn)
-                return;
+                return null;
+
             var hit = Physics2D.Raycast(_cam.ScreenToWorldPoint(UnityEngine.Input.mousePosition), Vector2.zero);
-            if (hit && hit.transform.TryGetComponent<GridPawn>(out var gridPawn))
-            {
-                if(_activePawn != null) _activePawn.PawnEffect.SetFocus(false);
-                _activePawn = gridPawn;
-            }
-            else
-            {
-                _activePawn = null;
-            } 
+            return hit && hit.transform.TryGetComponent<GridPawn>(out var gridPawn) ? gridPawn : null;
+        }
+
+        private void SetActivePawn()
+        {
+            var newPawn = GetPawnAtPointer();
+
+            if (_activePawn != null)
+                _activePawn.PawnEffect.SetFocus(false);
+
+            _activePawn = newPawn;
         }
         
         private void OnSingleTouch(InputAction.CallbackContext context)
         {
-            GetPawn();
+            SetActivePawn();
             if(_activePawn == null) return;
             _activePawn.PawnEffect.SetFocus(true);
 
@@ -80,7 +83,7 @@ namespace Input
             {
                 _lastPosition = Mouse.current.position.ReadValue();
             }
-            //ebug.Log("Drag Started at: " + _lastPosition);
+            //Debug.Log("Drag Started at: " + _lastPosition);
         }
 
         private void OnRelease(InputAction.CallbackContext context)

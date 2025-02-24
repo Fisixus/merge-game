@@ -1,5 +1,6 @@
 using System;
 using Core.GridPawns;
+using Core.Helpers;
 using Cysharp.Threading.Tasks;
 using MVP.Models.Interface;
 using MVP.Presenters.Handlers;
@@ -21,6 +22,7 @@ namespace MVP.Presenters
             _taskHandler = taskHandler;
             _gridView = gridView;
 
+            _gridModel.OnGridCoordinateToWorldPosCalculated += GridCoordinateToWorldPosCalculated;
             _gridModel.OnGridPawnInitialized += GridPawnInitialized;
             _gridModel.OnGridPawnUpdated += GridPawnUpdated;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
@@ -32,6 +34,7 @@ namespace MVP.Presenters
         }
         private void Dispose()
         {
+            _gridModel.OnGridCoordinateToWorldPosCalculated -= GridCoordinateToWorldPosCalculated;
             _gridModel.OnGridPawnInitialized -= GridPawnInitialized;
             _gridModel.OnGridPawnUpdated -= GridPawnUpdated;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
@@ -60,6 +63,13 @@ namespace MVP.Presenters
         //     _goalHandler.Initialize(levelInfo.Goals, levelInfo.NumberOfMoves);
         //     _gridView.Scale(levelInfo.GridSize);
         // }
+
+        private void GridCoordinateToWorldPosCalculated(Vector2Int coord)
+        {
+            var gridTr = _gridView.GridTopLeftTr.parent;
+            var scaleNormalizing = gridTr.localScale.x;
+            GridPositionHelper.CalculateItemWorldPosition(_gridView.GridTopLeftTr.position, _gridView.CellSize, coord, scaleNormalizing);
+        }
        
         private void GridPawnInitialized(GridPawn obj)
         {
