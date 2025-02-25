@@ -29,7 +29,16 @@ namespace MVP.Presenters
             SceneHelper.SetLoadingSceneActive(LoadingSceneName, true);
 
             // Unload the current scene
-            await SceneManager.UnloadSceneAsync(currentSceneName);
+            var unloadOp = SceneManager.UnloadSceneAsync(currentSceneName);
+           
+            if (unloadOp == null)
+            {
+                //Debug.LogError($"UnloadSceneAsync({currentSceneName}) returned NULL! The scene may already be unloading.");
+                return;
+            }
+
+            await unloadOp;
+
 
             // Load the next scene
             var loadOp = SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Additive);

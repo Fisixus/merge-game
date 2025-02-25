@@ -41,7 +41,7 @@ namespace MVP.Presenters
             _inventoryView.SubscribeInventoryButton(this);
             foreach (var inventoryPawn in _inventoryModel.Pawns)
             {
-                AddPawnToInventory(inventoryPawn);//TODO:
+                AddPawnToInventoryAfterLoad(inventoryPawn);
             }
 
         }
@@ -148,8 +148,7 @@ namespace MVP.Presenters
 
             _inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn); //  Save to inventory
         }
-        
-        private void AddPawnToInventory(InventoryPawn inventoryPawn)
+        private void AddPawnToInventoryAfterLoad(InventoryPawn inventoryPawn)
         {
             var newInventoryPawnUI = _inventoryPawnUIFactory.CreateObj();
             newInventoryPawnUI.InventoryPawn = inventoryPawn;
@@ -158,8 +157,6 @@ namespace MVP.Presenters
             
             newInventoryPawnUI.SubscribeToInventoryPawnUIClick(this);
             _inventoryView.InventoryPawnUIs.Add(newInventoryPawnUI);
-
-            //_inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn); //  Save to inventory
         }
 
         //  Remove the pawn from the grid
