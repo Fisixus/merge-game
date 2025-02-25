@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Factories.Interface;
 using Core.GridPawns;
 using Core.GridPawns.Enum;
+using Core.Inventories;
 using UnityEngine;
 
 namespace MVP.Presenters.Handlers
@@ -94,7 +95,7 @@ namespace MVP.Presenters.Handlers
             Debug.LogWarning($"Unknown grid type: {pawn}");
             return null;
         }
-        private GridPawn CreateGridPawn(Enum pawnType, int level, Vector2Int coordinate)
+        public GridPawn CreateGridPawn(Enum pawnType, int level, Vector2Int coordinate)
         {
             switch (pawnType)
             {
@@ -106,11 +107,6 @@ namespace MVP.Presenters.Handlers
                     Debug.LogWarning($"Unknown grid type: {pawnType} at {coordinate}");
                     return null;
             }
-        }
-
-        public Appliance GenerateAppliance(ApplianceType producerGeneratedApplianceType, int level, Vector2Int closestCoord)
-        {
-            return _applianceFactory.GenerateAppliance(producerGeneratedApplianceType, level, closestCoord);
         }
 
         public Producer RecycleProducer(Producer producer, Vector2Int randomEmptyCoordinate)
@@ -162,6 +158,7 @@ namespace MVP.Presenters.Handlers
             Debug.LogWarning($"Unknown grid type: {pawn.Type} at {coordinate}");
             return null;
         }
+
 
     }
 }

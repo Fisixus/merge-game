@@ -188,7 +188,7 @@ namespace MVP.Presenters
         private void ProduceAppliance(Producer producer, Vector2Int emptyCoord)
         {
             int level = producer.GetApplianceLevelToProduce();
-            var appliance = _gridPawnFactoryHandler.GenerateAppliance(producer.GeneratedApplianceType, level, emptyCoord);
+            var appliance = _gridPawnFactoryHandler.CreateGridPawn(producer.GeneratedApplianceType, level, emptyCoord);
     
             _gridModel.UpdateGridPawn(appliance, false, _activePawn.Coordinate, true, 0.3f);
             producer.ReduceCapacity();

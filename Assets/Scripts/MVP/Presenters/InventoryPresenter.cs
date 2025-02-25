@@ -1,6 +1,9 @@
 
+using System.Linq;
 using Core.Factories.Interface;
 using Core.GridPawns;
+using Core.Helpers;
+using Core.Inventories;
 using Input;
 using MVP.Models.Interface;
 using MVP.Presenters.Handlers;
@@ -36,7 +39,8 @@ namespace MVP.Presenters
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             
             _inventoryView.SubscribeInventoryButton(this);
-
+            //TODO:LOAD Inventory
+            
         }
         private void OnSceneUnloaded(Scene scene)
         {
@@ -49,6 +53,38 @@ namespace MVP.Presenters
             UserInput.OnGridPawnReleased -= OnReleased;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
+
+        public void OnPawnRequestedFromInventory(InventoryPawn inventoryPawn)
+        {
+            var matchingUI = _inventoryView.InventoryPawnUIs
+                .FirstOrDefault(ui => ui.InventoryPawn.ID == inventoryPawn.ID);
+
+            if (matchingUI != null)
+            {
+                var randomCoordinate = GridPositionHelper.FindRandomEmptyCoordinate(_gridModel.Grid);
+                if (randomCoordinate == null)
+                {
+                    //No space in grid
+                    matchingUI.Shake();
+                    return;
+                }
+                
+                //TODO Play particle effect maybe
+                _inventoryPawnUIFactory.DestroyObj(matchingUI);
+                _inventoryView.InventoryPawnUIs.Remove(matchingUI);
+                //Save Inventory
+                //TODO:_inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn);
+                
+                var newPawn = _gridPawnFactoryHandler.CreateGridPawn(inventoryPawn.Type, inventoryPawn.Level, randomCoordinate.Value);
+                _gridModel.UpdateGridPawn(newPawn, false, null, true, 0.2f);
+                _taskPresenter.UpdateTasks();
+            }
+            else
+            {
+                Debug.LogWarning($"No InventoryPawnUI found with ID: {inventoryPawn.ID}");
+            }        
+        }
+        
         public void OnInventoryRequested()
         {
             if (_activePawn == null)
@@ -68,18 +104,22 @@ namespace MVP.Presenters
             if(_activePawn != null && _inventoryView.InventoryButton.IsEntered)
             {
                 //TODO:Play particle effect 
+                
+                //Add Inventory
+                var newInventoryPawnUI = _inventoryPawnUIFactory.CreateObj();
+                newInventoryPawnUI.FillData(_activePawn);
+                newInventoryPawnUI.SubscribeToInventoryPawnUIClick(this);
+                _inventoryView.InventoryPawnUIs.Add(newInventoryPawnUI);
+                //Save Inventory
+                //TODO:_inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn);
+                
                 //Destroy from grid
                 _gridPawnFactoryHandler.DestroyPawn(_activePawn);
                 _gridModel.UpdateGridPawn(_activePawn, true);
                 _activePawn.PawnEffect.SetFocus(false);
                 _taskPresenter.UpdateTasks();
 
-                //Add Inventory
-                var newInventoryPawnUI = _inventoryPawnUIFactory.CreateObj();
-                newInventoryPawnUI.FillData(_activePawn);
-                _inventoryView.InventoryPawnUis.Add(newInventoryPawnUI);
-                //Save Inventory
-                _inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn);
+               
                 
                 _activePawn = null;
             }

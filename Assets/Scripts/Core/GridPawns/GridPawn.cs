@@ -38,8 +38,9 @@ namespace Core.GridPawns
             if (isAnimOn)
             {
                 int sortingOrder = SpriteRenderer.sortingOrder;
-                SetSortingOrder(1000, "UI");
-                BoxCollider.enabled = false;
+                //TODO:
+                //SetSortingOrder(1000, "UI");
+                //BoxCollider.enabled = false;
                 PawnEffect.Shift(worldPos, ()=>
                 {
                     BoxCollider.enabled = true;
@@ -63,8 +64,9 @@ namespace Core.GridPawns
             if (isAnimOn)
             {
                 int sortingOrder = SpriteRenderer.sortingOrder;
-                SetSortingOrder(1000, "UI");
-                BoxCollider.enabled = false;
+                //TODO:
+                //SetSortingOrder(1000, "UI");
+                //BoxCollider.enabled = false;
                 PawnEffect.Shift(position, ()=>
                 {
                     BoxCollider.enabled = true;

@@ -15,6 +15,6 @@ namespace MVP.Views.Interface
         void OpenInventoryPanel();
         void SubscribeInventoryButton(InventoryPresenter inventoryPresenter);
         
-        List<InventoryPawnUI> InventoryPawnUis { get; }
+        List<InventoryPawnUI> InventoryPawnUIs { get; }
     }
 }

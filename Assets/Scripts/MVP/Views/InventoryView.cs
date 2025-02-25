@@ -17,12 +17,12 @@ namespace MVP.Views
         
         [field: SerializeField]public Transform InventoryPawnUIsParentTr { get; private set; } // Parent UI panel
 
-        public List<InventoryPawnUI> InventoryPawnUis { get; private set; }
+        public List<InventoryPawnUI> InventoryPawnUIs { get; private set; }
 
         private void OnEnable()
         {
             InventoryCloseButton.onClick.AddListener(CloseInventoryPanel);
-            InventoryPawnUis = new List<InventoryPawnUI>();
+            InventoryPawnUIs = new List<InventoryPawnUI>();
         }
 
         private void OnDisable()

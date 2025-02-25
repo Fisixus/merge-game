@@ -12,11 +12,17 @@ namespace Core.Inventories
         //  Save inventory to JSON
         public static void SaveInventory(List<InventoryPawn> items)
         {
-            string json = JsonUtility.ToJson(new InventoryData(items), true);
+            var jsonItems = ConvertToInventoryJson(items);
+            string json = JsonUtility.ToJson(new InventoryData(jsonItems), true);
             File.WriteAllText(SavePath, json);
             Debug.Log($"Inventory saved to: {SavePath}");
         }
-    
+
+        private static List<InventoryPawnJson> ConvertToInventoryJson(List<InventoryPawn> items)
+        {
+            throw new System.NotImplementedException();
+        }
+
         //  Load inventory from JSON
         public static List<InventoryPawn> LoadInventory()
         {
@@ -28,7 +34,13 @@ namespace Core.Inventories
 
             string json = File.ReadAllText(SavePath);
             InventoryData inventoryData = JsonUtility.FromJson<InventoryData>(json);
-            return inventoryData.Items;
+            var items = ConvertToInventoryPawn(inventoryData.Items);
+            return items;
+        }
+
+        private static List<InventoryPawn> ConvertToInventoryPawn(List<InventoryPawnJson> inventoryDataItems)
+        {
+            throw new System.NotImplementedException();
         }
     }
     
@@ -36,9 +48,9 @@ namespace Core.Inventories
     [System.Serializable]
     public class InventoryData
     {
-        public List<InventoryPawn> Items;
+        public List<InventoryPawnJson> Items;
 
-        public InventoryData(List<InventoryPawn> items)
+        public InventoryData(List<InventoryPawnJson> items)
         {
             Items = items;
         }

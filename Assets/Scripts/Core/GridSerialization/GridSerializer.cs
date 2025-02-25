@@ -36,7 +36,7 @@ namespace Core.GridSerialization
                         var level = grid[i, j] is null ? -1 : grid[i, j].Level; 
                         JsonPawn pawn = new JsonPawn
                         {
-                            pawn_type = ConvertPawnTypeToJson(type).ToString(),
+                            pawn_type = JsonEnumConverter.ConvertPawnTypeToJson(type).ToString(),
                             level = level
                         };
                         jsonPawn[i, j] = pawn;
@@ -66,40 +66,14 @@ namespace Core.GridSerialization
             for (int j = 0; j < gridJson.grid_width; j++)
             {
                 gridPawnLevels[i, j] = gridJson.grid[gridIndex].level;
-                gridPawnTypes[i, j] = ConvertJsonToPawnType(gridJson.grid[gridIndex].pawn_type);
+                gridPawnTypes[i, j] = JsonEnumConverter.ConvertJsonToPawnType(gridJson.grid[gridIndex].pawn_type);
                 gridIndex++;
             }
 
             return (gridPawnTypes, gridPawnLevels);
         }
         
-        private static Enum ConvertJsonToPawnType(string pawnString)
-        {
-            switch (pawnString)
-            {
-                case nameof(JsonGridPawnType.empty):
-                    return ApplianceType.None;
-                case nameof(JsonGridPawnType.applianceA):
-                    return ApplianceType.ApplianceA;
-                case nameof(JsonGridPawnType.producerA):
-                    return ProducerType.ProducerA;
-                default:
-                    return ApplianceType.None;
-            }
-        }
         
-        private static JsonGridPawnType ConvertPawnTypeToJson(Enum gridPawnType)
-        {
-            switch (gridPawnType)
-            {
-                case ApplianceType.ApplianceA:
-                    return JsonGridPawnType.applianceA;
-                case ProducerType.ProducerA:
-                    return JsonGridPawnType.producerA;
-                default:
-                    return JsonGridPawnType.empty;
-            }
-        }
         
         public static GridJson ConvertToGridJson(int gridWidth, int gridHeight, JsonPawn[,] pawns)
         {
@@ -129,7 +103,7 @@ namespace Core.GridSerialization
             {
                 JsonPawn jsonPawn = new JsonPawn
                 {
-                    pawn_type = ConvertPawnTypeToJson(gridInfoGridPawnTypes[i,j]).ToString(),
+                    pawn_type = JsonEnumConverter.ConvertPawnTypeToJson(gridInfoGridPawnTypes[i,j]).ToString(),
                     level = gridInfoGridPawnLevels[i, j]
                 };
                 jsonPawns[i, j] = jsonPawn;
