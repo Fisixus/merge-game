@@ -18,10 +18,8 @@ namespace MVP.Presenters
     {
         private const int MaxTaskCount = 2;
         private readonly IGridModel _gridModel;
-        private readonly MergePresenter _mergePresenter;
         private readonly ITaskModel _taskModel;
         private readonly ITaskUIFactory _taskUIFactory;
-        private readonly IApplianceFactory _applianceFactory;
         private readonly DisappearEffectHandler _disappearEffectHandler;
         private readonly GridPawnFactoryHandler _gridPawnFactoryHandler;
 
@@ -29,15 +27,13 @@ namespace MVP.Presenters
         private GridPawn[,] _grid;
         
         public TaskPresenter(IGridModel gridModel, DisappearEffectHandler disappearEffectHandler, GridPawnFactoryHandler gridPawnFactoryHandler, ITaskModel taskModel, 
-            ITaskUIFactory taskUIFactory, IApplianceFactory applianceFactory)
+            ITaskUIFactory taskUIFactory)
         {
             _gridModel = gridModel;
             _disappearEffectHandler = disappearEffectHandler;
             _gridPawnFactoryHandler = gridPawnFactoryHandler;
-            //_mergePresenter = mergePresenter;
             _taskModel = taskModel;
             _taskUIFactory = taskUIFactory;
-            _applianceFactory = applianceFactory;
         }
 
         public async UniTask InitializeTasks()
@@ -120,10 +116,10 @@ namespace MVP.Presenters
 
             foreach (var goal in taskInfo.Goals)
             {
-                if (_applianceFactory.ApplianceDataDict.TryGetValue(goal.ApplianceType, out var applianceData) &&
-                    applianceData.ApplianceLevelDataDict.TryGetValue(goal.Level, out var levelData))
+                var sprite = _gridPawnFactoryHandler.GetSprite(goal.ApplianceType, goal.Level);
+                if (sprite != null)
                 {
-                    newTaskUI.SetGoalUI(goal, levelData.ApplianceSprite);
+                    newTaskUI.SetGoalUI(goal, sprite);
                 }
                 else
                 {

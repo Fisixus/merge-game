@@ -59,6 +59,41 @@ namespace MVP.Presenters.Handlers
             }
         }
         
+        public Sprite GetSprite(ApplianceType type, int level)
+        {
+            return GetApplianceSprite(type, level);
+        }
+
+        public Sprite GetSprite(ProducerType type, int level)
+        {
+            return GetProducerSprite(type, level);
+        }
+
+        public Sprite GetSprite(GridPawn pawn)
+        {
+            return pawn switch
+            {
+                Appliance appliance => GetApplianceSprite(appliance.ApplianceType, appliance.Level),
+                Producer producer => GetProducerSprite(producer.ProducerType, producer.Level),
+                _ => LogUnknownTypeAndReturnNull(pawn)
+            };
+        }
+
+        private Sprite GetApplianceSprite(ApplianceType type, int level)
+        {
+            return _applianceFactory.ApplianceDataDict[type].ApplianceLevelDataDict[level].ApplianceSprite;
+        }
+
+        private Sprite GetProducerSprite(ProducerType type, int level)
+        {
+            return _producerFactory.ProducerDataDict[type].ProducerLevelDataDict[level].ProducerSprite;
+        }
+
+        private Sprite LogUnknownTypeAndReturnNull(GridPawn pawn)
+        {
+            Debug.LogWarning($"Unknown grid type: {pawn}");
+            return null;
+        }
         private GridPawn CreateGridPawn(Enum pawnType, int level, Vector2Int coordinate)
         {
             switch (pawnType)
