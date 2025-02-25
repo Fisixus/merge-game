@@ -170,9 +170,9 @@ namespace Editor
         private void ApplyChanges()
         {
             var gridJson = GridSerializer.ConvertToGridJson(_gridWidth, _gridHeight, _gridObjects);
-            var (gridObjectTypes, gridObjectLevels) = GridSerializer.ProcessGridJson(gridJson);
+            var (gridObjectTypes, gridObjectLevels, gridPawnCapacities) = GridSerializer.ProcessGridJson(gridJson);
             
-            var gridInfo = new GridInfo(Transpose(gridObjectTypes), Transpose(gridObjectLevels));
+            var gridInfo = new GridInfo(Transpose(gridObjectTypes), Transpose(gridObjectLevels), Transpose(gridPawnCapacities));
             Debug.Log($"Grid JSON created:\n{JsonUtility.ToJson(gridJson, true)}");
 
             CreateGrid(gridInfo);

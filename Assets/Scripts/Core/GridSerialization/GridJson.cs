@@ -13,4 +13,5 @@ public class JsonPawn
 {
     public string pawn_type;  // Example: "ApplianceA", "ProducerB"
     public int level;  // Level of the pawn
+    public int capacity;
 }

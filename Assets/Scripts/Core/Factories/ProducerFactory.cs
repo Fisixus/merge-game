@@ -23,13 +23,15 @@ namespace Core.Factories
             _allProducers = new List<Producer>(8);
         }
     
-        public Producer GenerateProducer(ProducerType producerType, int producerLevel, Vector2Int producerCoordinate)
+        public Producer GenerateProducer(ProducerType producerType, int producerLevel, Vector2Int producerCoordinate, int capacityOverride = -1)
         {
             if (!ProducerDataDict.TryGetValue(producerType, out var producerData) ||
                 !producerData.ProducerLevelDataDict.TryGetValue(producerLevel, out var levelData)) return null;
             var producer = CreateObj();
             producer.SetAttributes(producerCoordinate, producerType, producerLevel, producerData.ProducerLevelDataDict.Count);
             producer.ApplyData(levelData);
+            if (capacityOverride != -1)
+                producer.Capacity = capacityOverride;
             return producer;
 
         }

@@ -19,7 +19,7 @@ namespace MVP.Presenters.Handlers
             _producerFactory = producerFactory;
         }
         
-        public void PopulateGridWithPawns(Enum[,] gridPawnTypes, int[,] gridPawnLevels, List<GridPawn> gridPawns)
+        public void PopulateGridWithPawns(Enum[,] gridPawnTypes, int[,] gridPawnLevels, int[,] gridPawnCapacities, List<GridPawn> gridPawns)
         {
             // Process the grid with column-to-row traversal
             for (int i = 0; i < gridPawnTypes.GetLength(1); i++) // Columns
@@ -29,9 +29,10 @@ namespace MVP.Presenters.Handlers
                     Vector2Int coordinate = new Vector2Int(i, j);
                     var gridType = gridPawnTypes[i, j];
                     var pawnLevel = gridPawnLevels[i, j];
+                    var capacity = gridPawnCapacities[i, j];
 
                     // Encapsulated factory logic
-                    var gridPawn = CreateGridPawn(gridType, pawnLevel, coordinate);
+                    var gridPawn = CreateGridPawn(gridType, pawnLevel, coordinate, capacity);
                     gridPawns.Add(gridPawn);
                 }
             }
@@ -91,14 +92,14 @@ namespace MVP.Presenters.Handlers
             Debug.LogWarning($"Unknown grid type: {e}");
             return null;
         }
-        public GridPawn CreateGridPawn(Enum pawnType, int level, Vector2Int coordinate)
+        public GridPawn CreateGridPawn(Enum pawnType, int level, Vector2Int coordinate, int capacity = -1)
         {
             switch (pawnType)
             {
                 case ApplianceType applianceType:
                     return _applianceFactory.GenerateAppliance(applianceType, level, coordinate);
                 case ProducerType producerType:
-                    return _producerFactory.GenerateProducer(producerType, level, coordinate);
+                    return _producerFactory.GenerateProducer(producerType, level, coordinate, capacity);
                 default:
                     Debug.LogWarning($"Unknown grid type: {pawnType} at {coordinate}");
                     return null;

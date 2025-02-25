@@ -16,8 +16,8 @@ namespace Core.GridSerialization
             
             string jsonString = File.ReadAllText(PersistentPath);
             var gridJson = JsonUtility.FromJson<GridJson>(jsonString);
-            var (gridPawnTypes, gridPawnLevels) =  ProcessGridJson(gridJson);
-            return new GridInfo(gridPawnTypes, gridPawnLevels);
+            var (gridPawnTypes, gridPawnLevels, gridPawnCapacities) =  ProcessGridJson(gridJson);
+            return new GridInfo(gridPawnTypes, gridPawnLevels, gridPawnCapacities);
 
         }
 
@@ -33,11 +33,13 @@ namespace Core.GridSerialization
                     for (int j = 0; j < rowCount; j++)
                     {
                         var type = grid[i, j] is null ? ApplianceType.None : grid[i, j].Type; 
-                        var level = grid[i, j] is null ? -1 : grid[i, j].Level; 
+                        var level = grid[i, j] is null ? -1 : grid[i, j].Level;
+                        var capacity = grid[i, j] is Producer producer ? producer.Capacity : -1;
                         JsonPawn pawn = new JsonPawn
                         {
                             pawn_type = JsonEnumConverter.ConvertPawnTypeToJson(type).ToString(),
-                            level = level
+                            level = level,
+                            capacity = capacity
                         };
                         jsonPawn[i, j] = pawn;
                     }
@@ -55,22 +57,24 @@ namespace Core.GridSerialization
             }
         }
         
-        public static (Enum[,] gridPawnTypes, int[,] gridPawnLevels) ProcessGridJson(GridJson gridJson)
+        public static (Enum[,] gridPawnTypes, int[,] gridPawnLevels, int[,] gridPawnCapacities) ProcessGridJson(GridJson gridJson)
         {
             
             var gridPawnTypes = new Enum[gridJson.grid_height, gridJson.grid_width];
             var gridPawnLevels = new int[gridJson.grid_height, gridJson.grid_width];
+            var gridPawnCapacities = new int[gridJson.grid_height, gridJson.grid_width];
 
             int gridIndex = 0;
             for (int i = 0; i < gridJson.grid_height; i++)
             for (int j = 0; j < gridJson.grid_width; j++)
             {
+                gridPawnCapacities[i, j] = gridJson.grid[gridIndex].capacity;
                 gridPawnLevels[i, j] = gridJson.grid[gridIndex].level;
                 gridPawnTypes[i, j] = JsonEnumConverter.ConvertJsonToPawnType(gridJson.grid[gridIndex].pawn_type);
                 gridIndex++;
             }
 
-            return (gridPawnTypes, gridPawnLevels);
+            return (gridPawnTypes, gridPawnLevels, gridPawnCapacities);
         }
         
         

@@ -98,13 +98,15 @@ namespace MVP.Models
             // Process the grid in a single loop
             var gridPawnLevels = gridInfo.GridPawnLevels;
             var gridPawnTypes = gridInfo.GridPawnTypes;
+            var gridPawnCapacities = gridInfo.GridPawnCapacities;
+            
             
             ColumnCount = gridPawnTypes.GetLength(0);
             RowCount = gridPawnTypes.GetLength(1);
             
             List<GridPawn> gridPawns = new List<GridPawn>(64);
             _gridPawnFactoryHandler.DestroyAllGridPawns();
-            _gridPawnFactoryHandler.PopulateGridWithPawns(gridPawnTypes, gridPawnLevels, gridPawns);
+            _gridPawnFactoryHandler.PopulateGridWithPawns(gridPawnTypes, gridPawnLevels, gridPawnCapacities, gridPawns);
             Initialize(gridPawns);
         }
 
@@ -117,6 +119,8 @@ namespace MVP.Models
         {
             var gridPawnLevels = new int[ColumnCount,RowCount];
             var gridPawnTypes = new Enum[ColumnCount,RowCount];
+            var gridPawnCapacities = new int[ColumnCount,RowCount];
+            
             for (int i = 0; i < gridPawnLevels.GetLength(0); i++)
             {
                 for (int j = 0; j < gridPawnLevels.GetLength(1); j++)
@@ -125,18 +129,20 @@ namespace MVP.Models
                     {
                         gridPawnTypes[i,j] = ProducerType.ProducerA;
                         gridPawnLevels[i,j] = 1;
+                        gridPawnCapacities[i, j] = 10;
                     }
                     else
                     {
                         gridPawnTypes[i,j] = ApplianceType.None;
                         gridPawnLevels[i,j] = 0;
+                        gridPawnCapacities[i, j] = -1;
                     }
                 }
             }
             
             List<GridPawn> gridPawns = new List<GridPawn>(64);
             _gridPawnFactoryHandler.DestroyAllGridPawns();
-            _gridPawnFactoryHandler.PopulateGridWithPawns(gridPawnTypes, gridPawnLevels, gridPawns);
+            _gridPawnFactoryHandler.PopulateGridWithPawns(gridPawnTypes, gridPawnLevels, gridPawnCapacities, gridPawns);
             
             Initialize(gridPawns);
 
