@@ -50,6 +50,11 @@ namespace MVP.Presenters
 
         }
 
+        public void UpdateGridAfterEditor()
+        {
+            _grid = _gridModel.Grid;
+        }
+        
         public async UniTask CompleteTask(int taskID, List<Appliance> appliancesToDestroy)
         {
             var taskToComplete = _activeTasks.FirstOrDefault(task => task.TaskID == taskID);

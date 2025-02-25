@@ -53,6 +53,11 @@ namespace Core.Tasks
             DoneButton.onClick.AddListener(async () => await taskPresenter.CompleteTask(TaskID, _matchedAppliances.Values.ToList()));
         }
 
+        public void ClearDict()
+        {
+            _matchedAppliances.Clear();
+        }
+
         public void SetGoalUI(Goal goal, Sprite sprite)
         {
             AllGoalUIs[_goalUIIndex].gameObject.SetActive(true);

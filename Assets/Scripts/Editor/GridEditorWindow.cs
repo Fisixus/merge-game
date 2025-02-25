@@ -176,6 +176,12 @@ namespace Editor
             Debug.Log($"Grid JSON created:\n{JsonUtility.ToJson(gridJson, true)}");
 
             CreateGrid(gridInfo);
+            
+            var context = SceneHelper.FindSceneContextInActiveScene();
+            var taskPresenter = context.SceneContainer.Resolve<TaskPresenter>();
+            taskPresenter.UpdateGridAfterEditor();
+            taskPresenter.UpdateTasks();
+            
         }
 
         private static void CreateGrid(GridInfo gridInfo)

@@ -9,7 +9,7 @@ namespace Core.Factories
     {
         public override void PreInitialize()
         {
-            Pool = new ObjectPool<InventoryPawnUI>(ObjPrefab, ParentTr, 8);
+            Pool = new ObjectPool<InventoryPawnUI>(ObjPrefab, ParentTr, 16);
         }
     }
 }
