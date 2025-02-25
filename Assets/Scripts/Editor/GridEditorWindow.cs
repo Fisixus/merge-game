@@ -171,13 +171,13 @@ namespace Editor
         {
             var gridJson = GridSerializer.ConvertToGridJson(_gridWidth, _gridHeight, _gridObjects);
             var (gridObjectTypes, gridObjectLevels, gridPawnCapacities) = GridSerializer.ProcessGridJson(gridJson);
-            
+            FillCapacitiesToValue(gridPawnCapacities, 10);
             var gridInfo = new GridInfo(Transpose(gridObjectTypes), Transpose(gridObjectLevels), Transpose(gridPawnCapacities));
             Debug.Log($"Grid JSON created:\n{JsonUtility.ToJson(gridJson, true)}");
 
             CreateGrid(gridInfo);
         }
-        
+
         private static void CreateGrid(GridInfo gridInfo)
         {
             if (!IsMergeSceneActive())
@@ -266,7 +266,12 @@ namespace Editor
             return SceneManager.GetActiveScene().name == "MergeScene";
         }
 
-
+        private void FillCapacitiesToValue(int[,] gridPawnCapacities, int value)
+        {
+            for (int x = 0; x < _gridHeight; x++)
+            for (int y = 0; y < _gridWidth; y++)
+                gridPawnCapacities[x, y] = value;
+        }
         #endregion
     }
 }
