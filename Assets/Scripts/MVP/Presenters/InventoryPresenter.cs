@@ -1,4 +1,3 @@
-
 using System.Linq;
 using Core.Factories.Interface;
 using Core.GridPawns;
@@ -24,7 +23,8 @@ namespace MVP.Presenters
 
         private GridPawn _activePawn;
 
-        public InventoryPresenter(IInventoryModel inventoryModel, IInventoryView inventoryView, IInventoryPawnUIFactory inventoryPawnUIFactory,
+        public InventoryPresenter(IInventoryModel inventoryModel, IInventoryView inventoryView,
+            IInventoryPawnUIFactory inventoryPawnUIFactory,
             IGridModel gridModel, GridPawnFactoryHandler gridPawnFactoryHandler, TaskPresenter taskPresenter)
         {
             _inventoryModel = inventoryModel;
@@ -33,22 +33,23 @@ namespace MVP.Presenters
             _gridModel = gridModel;
             _gridPawnFactoryHandler = gridPawnFactoryHandler;
             _taskPresenter = taskPresenter;
-            
+
             UserInput.OnGridPawnSingleTouched += OnTouched;
             UserInput.OnGridPawnReleased += OnReleased;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
-            
+
             _inventoryView.SubscribeInventoryButton(this);
             foreach (var inventoryPawn in _inventoryModel.Pawns)
             {
                 AddPawnToInventoryAfterLoad(inventoryPawn);
             }
-
         }
+
         private void OnSceneUnloaded(Scene scene)
         {
             Dispose();
         }
+
         private void Dispose()
         {
             // Unsubscribe from static and instance events
@@ -56,6 +57,7 @@ namespace MVP.Presenters
             UserInput.OnGridPawnReleased -= OnReleased;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
+
         public void OnPawnRequestedFromInventory(InventoryPawn inventoryPawn)
         {
             var matchingUI = FindMatchingInventoryUI(inventoryPawn);
@@ -110,7 +112,7 @@ namespace MVP.Presenters
             // TODO: Implement particle effect here
         }
 
-        
+
         public void OnInventoryRequested()
         {
             _inventoryView.OpenInventoryPanel();
@@ -128,7 +130,7 @@ namespace MVP.Presenters
             PlayReleaseEffects();
             AddPawnToInventory();
             RemovePawnFromGrid();
-    
+
             _taskPresenter.UpdateTasks();
             _activePawn = null;
         }
@@ -148,13 +150,15 @@ namespace MVP.Presenters
 
             _inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn); //  Save to inventory
         }
+
         private void AddPawnToInventoryAfterLoad(InventoryPawn inventoryPawn)
         {
             var newInventoryPawnUI = _inventoryPawnUIFactory.CreateObj();
             newInventoryPawnUI.InventoryPawn = inventoryPawn;
-            
-            newInventoryPawnUI.SetPawnUISprite(_gridPawnFactoryHandler.GetSprite(inventoryPawn.Type, inventoryPawn.Level));
-            
+
+            newInventoryPawnUI.SetPawnUISprite(
+                _gridPawnFactoryHandler.GetSprite(inventoryPawn.Type, inventoryPawn.Level));
+
             newInventoryPawnUI.SubscribeToInventoryPawnUIClick(this);
             _inventoryView.InventoryPawnUIs.Add(newInventoryPawnUI);
         }
@@ -166,6 +170,5 @@ namespace MVP.Presenters
             _gridModel.UpdateGridPawn(_activePawn, true);
             _activePawn.PawnEffect.SetFocus(false);
         }
-
     }
 }

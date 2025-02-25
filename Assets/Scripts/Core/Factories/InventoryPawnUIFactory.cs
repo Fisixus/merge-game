@@ -1,7 +1,6 @@
 using Core.Factories.Interface;
 using Core.Factories.Pools;
 using Core.Inventories;
-using MVP.Views;
 
 namespace Core.Factories
 {

@@ -1,4 +1,5 @@
 using System;
+using Core.GridPawns.Data;
 using Core.GridPawns.Effect;
 using Core.GridPawns.Enum;
 using UnityEngine;
@@ -8,9 +9,9 @@ namespace Core.GridPawns
     public class Appliance : GridPawn
     {
         [field: SerializeField] public ApplianceType ApplianceType { get; set; }
-        
+
         // Override PawnEffect to return ApplianceEffect
-         public new ApplianceEffect PawnEffect => (ApplianceEffect)base.PawnEffect;
+        public new ApplianceEffect PawnEffect => (ApplianceEffect)base.PawnEffect;
 
         public override System.Enum Type
         {

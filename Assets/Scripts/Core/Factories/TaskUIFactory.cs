@@ -1,13 +1,14 @@
-using Core.Factories;
 using Core.Factories.Interface;
 using Core.Factories.Pools;
 using Core.Tasks;
 
-public class TaskUIFactory : ObjectFactory<TaskUI>, ITaskUIFactory
+namespace Core.Factories
 {
-
-    public override void PreInitialize()
+    public class TaskUIFactory : ObjectFactory<TaskUI>, ITaskUIFactory
     {
-        Pool = new ObjectPool<TaskUI>(ObjPrefab, ParentTr, 4);
+        public override void PreInitialize()
+        {
+            Pool = new ObjectPool<TaskUI>(ObjPrefab, ParentTr, 4);
+        }
     }
 }

@@ -1,12 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.GridPawns;
-using Core.GridPawns.Enum;
-using Core.Helpers;
 using DG.Tweening;
 using MVP.Presenters;
-using MVP.Presenters.Handlers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,20 +15,20 @@ namespace Core.Tasks
         [field: SerializeField] public RawImage CharImage { get; set; }
         [field: SerializeField] public Button DoneButton { get; private set; }
         [field: SerializeField] public List<GoalUI> AllGoalUIs { get; private set; }
-        
+
         private int _goalUIIndex;
         private Dictionary<GoalUI, Appliance> _matchedAppliances; // Track matched pawns
-        
+
         public List<GoalUI> ActiveGoals { get; private set; }
-        
+
         private void OnEnable()
         {
             _goalUIIndex = 0;
             DoneButton.transform.localScale = Vector3.zero;
-            
+
             _matchedAppliances = new Dictionary<GoalUI, Appliance>();
             ActiveGoals = new List<GoalUI>();
-            
+
             foreach (var goalUI in AllGoalUIs)
             {
                 goalUI.gameObject.SetActive(false);
@@ -45,12 +41,14 @@ namespace Core.Tasks
             {
                 goalUI.gameObject.SetActive(false);
             }
+
             DoneButton.onClick.RemoveAllListeners();
         }
-        
+
         public void SubscribeDoneButton(TaskPresenter taskPresenter)
         {
-            DoneButton.onClick.AddListener(async () => await taskPresenter.CompleteTask(TaskID, _matchedAppliances.Values.ToList()));
+            DoneButton.onClick.AddListener(async () =>
+                await taskPresenter.CompleteTask(TaskID, _matchedAppliances.Values.ToList()));
         }
 
         public void ClearDict()
@@ -68,7 +66,7 @@ namespace Core.Tasks
             };
             AllGoalUIs[_goalUIIndex].Goal = newGoal;
             AllGoalUIs[_goalUIIndex].GoalImage.sprite = sprite;
-            
+
             ActiveGoals.Add(AllGoalUIs[_goalUIIndex++]);
         }
 
@@ -88,6 +86,7 @@ namespace Core.Tasks
 
             CheckAllGoalsCompleted(); // Recalculate if "Done" button should be visible
         }
+
         private void CheckAllGoalsCompleted()
         {
             if (_matchedAppliances.Count == ActiveGoals.Count)
@@ -99,7 +98,7 @@ namespace Core.Tasks
                 SetDoneButton(false);
             }
         }
-        
+
         private void SetDoneButton(bool isDone)
         {
             DoneButton.transform.DOKill();
@@ -113,6 +112,5 @@ namespace Core.Tasks
                 DoneButton.transform.DOScale(0f, 0.3f);
             }
         }
-        
     }
 }

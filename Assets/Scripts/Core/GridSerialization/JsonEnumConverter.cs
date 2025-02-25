@@ -19,7 +19,7 @@ namespace Core.GridSerialization
                     return ApplianceType.None;
             }
         }
-        
+
         public static JsonGridPawnType ConvertPawnTypeToJson(Enum gridPawnType)
         {
             switch (gridPawnType)

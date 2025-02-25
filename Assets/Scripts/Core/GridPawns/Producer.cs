@@ -5,23 +5,24 @@ using Core.GridPawns.Data;
 using Core.GridPawns.Effect;
 using Core.GridPawns.Enum;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Core.GridPawns
 {
     public class Producer : GridPawn
     {
         [field: SerializeField] public SpriteRenderer CapacitySprite { get; private set; }
-        
+
         [field: SerializeField] public ProducerType ProducerType { get; set; }
         [field: SerializeField] public int Capacity { get; set; }
         [field: SerializeField] public ApplianceType GeneratedApplianceType { get; set; }
-        
+
         // Override PawnEffect to return ProducerEffect
         public new ProducerEffect PawnEffect => (ProducerEffect)base.PawnEffect;
 
         private Dictionary<int, float> _generatingRatioDict { get; set; }
         private int _maxCapacity;
-        
+
         private Coroutine _capacityCoroutine;
 
         public override System.Enum Type
@@ -45,7 +46,7 @@ namespace Core.GridPawns
             GeneratedApplianceType = producerData.GeneratedApplianceType;
             _generatingRatioDict = producerData.GeneratingRatioDict;
         }
-        
+
         private void StartCapacityIncrease()
         {
             if (_capacityCoroutine == null)
@@ -82,7 +83,7 @@ namespace Core.GridPawns
                 }
             }
         }
-        
+
         public void ReduceCapacity()
         {
             Capacity = Mathf.Max(0, --Capacity);
@@ -92,7 +93,6 @@ namespace Core.GridPawns
             {
                 StartCapacityIncrease(); // Restart capacity increase if needed
             }
-            
         }
 
         public override string ToString()
@@ -109,7 +109,7 @@ namespace Core.GridPawns
                 return 1; // Default level
             }
 
-            float randomValue = UnityEngine.Random.value; // Random float between 0.0 - 1.0
+            float randomValue = Random.value; // Random float between 0.0 - 1.0
             float cumulativeProbability = 0f;
 
             foreach (var kvp in _generatingRatioDict)

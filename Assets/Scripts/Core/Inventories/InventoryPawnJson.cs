@@ -5,7 +5,7 @@ namespace Core.Inventories
     [Serializable]
     public class InventoryPawnJson
     {
-        public string id;  
+        public string id;
         public string type;
         public int level;
     }

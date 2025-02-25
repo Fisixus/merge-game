@@ -14,7 +14,7 @@ namespace MVP.Presenters.Handlers
         {
             _disappearEffectFactory = disappearEffectFactory;
         }
-        
+
         public async UniTaskVoid PlayDisappearEffect(Vector3 worldPos, ColorType colorType)
         {
             DisappearParticle disappearParticle = _disappearEffectFactory.GenerateDisappearEffect(colorType);
@@ -22,7 +22,6 @@ namespace MVP.Presenters.Handlers
             var duration = disappearParticle.Play();
             await UniTask.Delay(TimeSpan.FromSeconds(duration), DelayType.DeltaTime);
             _disappearEffectFactory.DestroyObj(disappearParticle);
-            
         }
     }
 }

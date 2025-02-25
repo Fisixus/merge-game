@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public abstract class GridPawnLevelDataSO : ScriptableObject
+namespace Core.GridPawns.Data
 {
-    [field: SerializeField] public Vector2 GridPawnWidthHeight { get; private set; }
+    public abstract class GridPawnLevelDataSO : ScriptableObject
+    {
+        [field: SerializeField] public Vector2 GridPawnWidthHeight { get; private set; }
+    }
 }

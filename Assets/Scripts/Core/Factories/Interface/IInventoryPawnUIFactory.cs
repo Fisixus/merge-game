@@ -1,5 +1,4 @@
 using Core.Inventories;
-using MVP.Views;
 
 namespace Core.Factories.Interface
 {

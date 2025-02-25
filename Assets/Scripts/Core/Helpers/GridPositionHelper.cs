@@ -52,7 +52,7 @@ namespace Core.Helpers
 
             foreach (var kvp in CoordinateToWorldPosDict)
             {
-                if(kvp.Key == selfCoordinate) continue;
+                if (kvp.Key == selfCoordinate) continue;
                 float distance = Vector3.Distance(kvp.Value, releasePoint);
                 //Debug.Log(distance);
                 if (distance < minDistance)
@@ -86,7 +86,7 @@ namespace Core.Helpers
             // Return a random empty coordinate if available
             if (emptyCoordinates.Count > 0)
             {
-                return emptyCoordinates[UnityEngine.Random.Range(0, emptyCoordinates.Count)];
+                return emptyCoordinates[Random.Range(0, emptyCoordinates.Count)];
             }
 
             return null; // No empty coordinate found
@@ -98,7 +98,7 @@ namespace Core.Helpers
         {
             int columnCount = grid.GetLength(0);
             int rowCount = grid.GetLength(1);
-            
+
             Queue<Vector2Int> queue = new Queue<Vector2Int>();
             HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 
@@ -108,10 +108,10 @@ namespace Core.Helpers
             // Define movement directions: Right, Left, Down, Up
             Vector2Int[] directions =
             {
-                new Vector2Int(1, 0),  // Right
+                new Vector2Int(1, 0), // Right
                 new Vector2Int(-1, 0), // Left
-                new Vector2Int(0, 1),  // Up
-                new Vector2Int(0, -1)  // Down
+                new Vector2Int(0, 1), // Up
+                new Vector2Int(0, -1) // Down
             };
 
             while (queue.Count > 0)
@@ -144,6 +144,5 @@ namespace Core.Helpers
         {
             return coord.x >= 0 && coord.x < columnCount && coord.y >= 0 && coord.y < rowCount;
         }
-
     }
 }

@@ -4,7 +4,6 @@ using Core.GridPawns;
 using Core.GridPawns.Enum;
 using Core.GridSerialization;
 using Core.Helpers;
-using JetBrains.Annotations;
 using MVP.Models.Interface;
 using MVP.Presenters.Handlers;
 using UnityEngine;
@@ -17,7 +16,7 @@ namespace MVP.Models
         public GridPawn[,] Grid { get; private set; } // x:column, y:row
         public int ColumnCount { get; private set; }
         public int RowCount { get; private set; }
-        
+
         public event Action<Vector2Int> OnGridCoordinateToWorldPosCalculated;
         public event Action<GridPawn> OnGridPawnInitialized;
         public event Action<GridPawn, Vector2Int?, bool, float> OnGridPawnUpdated;
@@ -26,7 +25,7 @@ namespace MVP.Models
         {
             _gridPawnFactoryHandler = gridPawnFactoryHandler;
         }
-        
+
         private void Initialize(List<GridPawn> gridObjs)
         {
             Grid = new GridPawn[ColumnCount, RowCount];
@@ -46,10 +45,12 @@ namespace MVP.Models
                     }
                 }
             }
+
             SaveGrid();
         }
 
-        public void UpdateGridPawn(GridPawn gridPawn, bool isRemoving, Vector2Int? coordOverride = null, bool isAnimationOn = false, float animTime = 0f)
+        public void UpdateGridPawn(GridPawn gridPawn, bool isRemoving, Vector2Int? coordOverride = null,
+            bool isAnimationOn = false, float animTime = 0f)
         {
             if (gridPawn == null) return; // Ensure gridPawn is valid
 
@@ -66,15 +67,14 @@ namespace MVP.Models
             SaveGrid();
         }
 
-        
+
         public void SwapGridItems(GridPawn firstPawn, Vector2Int secondCoord)
         {
             var firstCoord = firstPawn.Coordinate;
-        
+
             // Swap the pawns even if one is null (to move into an empty space)
             GridPawnModifierHelper.SwapItems(Grid, firstCoord.x, firstCoord.y, secondCoord.x, secondCoord.y);
             SaveGrid();
-
         }
 
         public GridInfo GetGridInfo()
@@ -85,6 +85,7 @@ namespace MVP.Models
                 ColumnCount = 8;
                 RowCount = 8;
             }
+
             return gridInfo;
         }
 
@@ -95,15 +96,16 @@ namespace MVP.Models
                 CreateGridFirstTime();
                 return;
             }
+
             // Process the grid in a single loop
             var gridPawnLevels = gridInfo.GridPawnLevels;
             var gridPawnTypes = gridInfo.GridPawnTypes;
             var gridPawnCapacities = gridInfo.GridPawnCapacities;
-            
-            
+
+
             ColumnCount = gridPawnTypes.GetLength(0);
             RowCount = gridPawnTypes.GetLength(1);
-            
+
             List<GridPawn> gridPawns = new List<GridPawn>(64);
             _gridPawnFactoryHandler.DestroyAllGridPawns();
             _gridPawnFactoryHandler.PopulateGridWithPawns(gridPawnTypes, gridPawnLevels, gridPawnCapacities, gridPawns);
@@ -117,36 +119,34 @@ namespace MVP.Models
 
         private void CreateGridFirstTime()
         {
-            var gridPawnLevels = new int[ColumnCount,RowCount];
-            var gridPawnTypes = new Enum[ColumnCount,RowCount];
-            var gridPawnCapacities = new int[ColumnCount,RowCount];
-            
+            var gridPawnLevels = new int[ColumnCount, RowCount];
+            var gridPawnTypes = new Enum[ColumnCount, RowCount];
+            var gridPawnCapacities = new int[ColumnCount, RowCount];
+
             for (int i = 0; i < gridPawnLevels.GetLength(0); i++)
             {
                 for (int j = 0; j < gridPawnLevels.GetLength(1); j++)
                 {
                     if (j < 5 && i == 4)
                     {
-                        gridPawnTypes[i,j] = ProducerType.ProducerA;
-                        gridPawnLevels[i,j] = 1;
+                        gridPawnTypes[i, j] = ProducerType.ProducerA;
+                        gridPawnLevels[i, j] = 1;
                         gridPawnCapacities[i, j] = 10;
                     }
                     else
                     {
-                        gridPawnTypes[i,j] = ApplianceType.None;
-                        gridPawnLevels[i,j] = 0;
+                        gridPawnTypes[i, j] = ApplianceType.None;
+                        gridPawnLevels[i, j] = 0;
                         gridPawnCapacities[i, j] = -1;
                     }
                 }
             }
-            
+
             List<GridPawn> gridPawns = new List<GridPawn>(64);
             _gridPawnFactoryHandler.DestroyAllGridPawns();
             _gridPawnFactoryHandler.PopulateGridWithPawns(gridPawnTypes, gridPawnLevels, gridPawnCapacities, gridPawns);
-            
+
             Initialize(gridPawns);
-
-
         }
     }
 }

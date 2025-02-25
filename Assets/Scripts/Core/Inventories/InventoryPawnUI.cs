@@ -1,6 +1,4 @@
-using System;
 using Core.GridPawns;
-using Core.Tasks;
 using DG.Tweening;
 using MVP.Presenters;
 using UnityEngine;
@@ -10,9 +8,9 @@ namespace Core.Inventories
 {
     public class InventoryPawnUI : MonoBehaviour
     {
-        [field:SerializeField] public Button PawnButton { get;  private set; }
+        [field: SerializeField] public Button PawnButton { get; private set; }
         public InventoryPawn InventoryPawn { get; set; }
-        
+
         private Sequence _shakeSeq;
 
         private void OnDisable()
@@ -22,7 +20,7 @@ namespace Core.Inventories
 
         public void SubscribeToInventoryPawnUIClick(InventoryPresenter inventoryPresenter)
         {
-            PawnButton.onClick.AddListener(()=>inventoryPresenter.OnPawnRequestedFromInventory(InventoryPawn));
+            PawnButton.onClick.AddListener(() => inventoryPresenter.OnPawnRequestedFromInventory(InventoryPawn));
         }
 
         public void FillData(GridPawn activePawn)

@@ -17,7 +17,6 @@ namespace MVP.Presenters.Handlers
             await gridPresenter.LoadGrid();
             TaskPresenter taskPresenter = container.Resolve<TaskPresenter>();
             await taskPresenter.InitializeTasks();
-
         }
     }
 }

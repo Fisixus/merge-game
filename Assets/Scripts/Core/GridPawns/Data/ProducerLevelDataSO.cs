@@ -9,7 +9,10 @@ namespace Core.GridPawns.Data
     {
         [field: SerializeField] public Sprite ProducerSprite { get; private set; }
         [field: SerializeField] public int Capacity { get; private set; }
-        [field: SerializeField] public ApplianceType GeneratedApplianceType { get; private set; } //TODO: Could be more than one ApplianceType for future
+
+        [field: SerializeField]
+        public ApplianceType
+            GeneratedApplianceType { get; private set; } //TODO: Could be more than one ApplianceType for future
 
         [field: SerializeField]
         [SerializedDictionary("Appliance Level", "Generation Ratio")]

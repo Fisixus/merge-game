@@ -8,7 +8,7 @@ namespace MVP.Models
 {
     public class TaskModel : ITaskModel
     {
-        private Queue<TaskSO> _taskQueue;  // Queue to store available tasks
+        private Queue<TaskSO> _taskQueue; // Queue to store available tasks
         private List<int> _completedTaskIDs; // Store IDs of completed tasks
 
         public TaskModel()
@@ -40,7 +40,7 @@ namespace MVP.Models
             {
                 _completedTaskIDs.Add(taskID);
                 SaveCompletedTasks();
-                
+
                 Debug.Log($"Task {taskID} completed! Remaining Tasks: {_taskQueue.Count}");
             }
         }

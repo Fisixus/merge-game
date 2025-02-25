@@ -1,9 +1,6 @@
 using System;
-using System.Linq;
 using Core.GridSerialization;
-using DI.Contexts;
 using MVP.Helpers;
-using MVP.Models;
 using MVP.Models.Interface;
 using MVP.Presenters;
 using UnityEditor;
@@ -17,7 +14,7 @@ namespace Editor
         private int _gridWidth = 8;
         private int _gridHeight = 8;
         private JsonPawn[,] _gridObjects;
-        
+
         private Vector2 _scrollPosition = Vector2.zero; //  Store scroll position
 
         [MenuItem("Tools/Grid Editor")]
@@ -71,7 +68,8 @@ namespace Editor
                 InitializeGrid();
             }
 
-            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(300)); //  Add horizontal scrolling
+            _scrollPosition =
+                EditorGUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(300)); //  Add horizontal scrolling
 
             for (int i = 0; i < _gridHeight; i++)
             {
@@ -79,12 +77,14 @@ namespace Editor
                 for (int j = 0; j < _gridWidth; j++)
                 {
                     JsonPawn pawn = _gridObjects[i, j];
-                    if(pawn == null) continue;
+                    if (pawn == null) continue;
 
                     EditorGUILayout.BeginVertical("box"); //  Set width per item
 
                     // Convert stored string to Enum for dropdown
-                    JsonGridPawnType pawnTypeEnum = Enum.TryParse(pawn.pawn_type, out JsonGridPawnType parsedEnum) ? parsedEnum : JsonGridPawnType.empty;
+                    JsonGridPawnType pawnTypeEnum = Enum.TryParse(pawn.pawn_type, out JsonGridPawnType parsedEnum)
+                        ? parsedEnum
+                        : JsonGridPawnType.empty;
                     pawnTypeEnum = (JsonGridPawnType)EditorGUILayout.EnumPopup("Type", pawnTypeEnum); //  Adjust width
 
                     // Convert back to string for storage in JsonPawn
@@ -95,12 +95,13 @@ namespace Editor
 
                     _gridObjects[i, j] = pawn;
                 }
+
                 EditorGUILayout.EndHorizontal();
             }
 
             EditorGUILayout.EndScrollView(); //  Close scroll view
         }
-        
+
         private void DrawLoadGridButton()
         {
             if (GUILayout.Button("Load Grid To Editor"))
@@ -131,12 +132,15 @@ namespace Editor
                 {
                     for (int j = 0; j < _gridWidth; j++)
                     {
-                        _gridObjects[i, j] = new JsonPawn { pawn_type = JsonGridPawnType.empty.ToString(), level = 0 }; //  Default enum value as string
+                        _gridObjects[i, j] = new JsonPawn
+                        {
+                            pawn_type = JsonGridPawnType.empty.ToString(), level = 0
+                        }; //  Default enum value as string
                     }
                 }
             }
         }
-        
+
         private void LoadGrid()
         {
             if (!IsMergeSceneActive())
@@ -172,16 +176,16 @@ namespace Editor
             var gridJson = GridSerializer.ConvertToGridJson(_gridWidth, _gridHeight, _gridObjects);
             var (gridObjectTypes, gridObjectLevels, gridPawnCapacities) = GridSerializer.ProcessGridJson(gridJson);
             FillCapacitiesToValue(gridPawnCapacities, 10);
-            var gridInfo = new GridInfo(Transpose(gridObjectTypes), Transpose(gridObjectLevels), Transpose(gridPawnCapacities));
+            var gridInfo = new GridInfo(Transpose(gridObjectTypes), Transpose(gridObjectLevels),
+                Transpose(gridPawnCapacities));
             Debug.Log($"Grid JSON created:\n{JsonUtility.ToJson(gridJson, true)}");
 
             CreateGrid(gridInfo);
-            
+
             var context = SceneHelper.FindSceneContextInActiveScene();
             var taskPresenter = context.SceneContainer.Resolve<TaskPresenter>();
             taskPresenter.UpdateGridAfterEditor();
             taskPresenter.UpdateTasks();
-            
         }
 
         private static void CreateGrid(GridInfo gridInfo)
@@ -194,14 +198,12 @@ namespace Editor
 
             var context = SceneHelper.FindSceneContextInActiveScene();
             var gridPresenter = context.SceneContainer.Resolve<GridPresenter>();
-            
+
             gridPresenter.LoadFromGridEditor(gridInfo);
 
             Debug.Log("Grid created successfully.");
         }
-        
-        
-        
+
         #endregion
 
         #region Grid Management
@@ -226,7 +228,10 @@ namespace Editor
                     }
                     else
                     {
-                        newGrid[i, j] = new JsonPawn { pawn_type = JsonGridPawnType.empty.ToString(), level = 0 }; //  Default enum value as string
+                        newGrid[i, j] = new JsonPawn
+                        {
+                            pawn_type = JsonGridPawnType.empty.ToString(), level = 0
+                        }; //  Default enum value as string
                     }
                 }
             }
@@ -235,6 +240,7 @@ namespace Editor
             _gridHeight = newHeight;
             _gridWidth = newWidth;
         }
+
         private void PopulateGrid(JsonPawn[,] gridData)
         {
             for (int i = 0; i < _gridHeight; i++)
@@ -245,6 +251,7 @@ namespace Editor
                 }
             }
         }
+
         #endregion
 
         #region Serialization Helpers
@@ -278,6 +285,7 @@ namespace Editor
             for (int y = 0; y < _gridWidth; y++)
                 gridPawnCapacities[x, y] = value;
         }
+
         #endregion
     }
 }

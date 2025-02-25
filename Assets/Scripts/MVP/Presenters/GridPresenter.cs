@@ -4,7 +4,6 @@ using Core.GridSerialization;
 using Core.Helpers;
 using Cysharp.Threading.Tasks;
 using MVP.Models.Interface;
-using MVP.Presenters.Handlers;
 using MVP.Views.Interface;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,7 +14,7 @@ namespace MVP.Presenters
     {
         private readonly IGridModel _gridModel;
         private readonly IGridView _gridView;
-        
+
         public GridPresenter(IGridModel gridModel, IGridView gridView)
         {
             _gridModel = gridModel;
@@ -26,11 +25,12 @@ namespace MVP.Presenters
             _gridModel.OnGridPawnUpdated += GridPawnUpdated;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
         }
-        
+
         private void OnSceneUnloaded(Scene scene)
         {
             Dispose();
         }
+
         private void Dispose()
         {
             _gridModel.OnGridCoordinateToWorldPosCalculated -= GridCoordinateToWorldPosCalculated;
@@ -38,7 +38,7 @@ namespace MVP.Presenters
             _gridModel.OnGridPawnUpdated -= GridPawnUpdated;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
-        
+
         public async UniTask LoadGrid()
         {
             // TODO: Addressable logic next step
@@ -65,14 +65,15 @@ namespace MVP.Presenters
         {
             var gridTr = _gridView.GridTopLeftTr.parent;
             var scaleNormalizing = gridTr.localScale.x;
-            GridPositionHelper.CalculateItemWorldPosition(_gridView.GridTopLeftTr.position, _gridView.CellSize, coord, scaleNormalizing);
+            GridPositionHelper.CalculateItemWorldPosition(_gridView.GridTopLeftTr.position, _gridView.CellSize, coord,
+                scaleNormalizing);
         }
-       
+
         private void GridPawnInitialized(GridPawn obj)
         {
             obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr);
         }
-        
+
         private void GridPawnUpdated(GridPawn obj, Vector2Int? newCoord, bool isAnimOn, float animTime)
         {
             obj.SetWorldPosition(_gridView.CellSize, _gridView.GridTopLeftTr, newCoord);

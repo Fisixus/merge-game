@@ -10,12 +10,12 @@ namespace MVP.Views
 {
     public class InventoryView : MonoBehaviour, IInventoryView
     {
-        [field: SerializeField]public ParticleSystem InventoryButtonParticle { get; private set; } 
-        [field: SerializeField]public CanvasGroup InventoryCanvasGroup { get; private set; } 
-        [field: SerializeField]public InventoryButton InventoryButton { get; private set; }
-        [field: SerializeField]public Button InventoryCloseButton { get; private set; }
-        
-        [field: SerializeField]public Transform InventoryPawnUIsParentTr { get; private set; } // Parent UI panel
+        [field: SerializeField] public ParticleSystem InventoryButtonParticle { get; private set; }
+        [field: SerializeField] public CanvasGroup InventoryCanvasGroup { get; private set; }
+        [field: SerializeField] public InventoryButton InventoryButton { get; private set; }
+        [field: SerializeField] public Button InventoryCloseButton { get; private set; }
+
+        [field: SerializeField] public Transform InventoryPawnUIsParentTr { get; private set; } // Parent UI panel
 
         public List<InventoryPawnUI> InventoryPawnUIs { get; private set; } = new List<InventoryPawnUI>();
 
@@ -29,9 +29,10 @@ namespace MVP.Views
             InventoryButton.Button.onClick.RemoveAllListeners();
             InventoryCloseButton.onClick.RemoveAllListeners();
         }
+
         public void SubscribeInventoryButton(InventoryPresenter inventoryPresenter)
         {
-            InventoryButton.Button.onClick.AddListener(()=> inventoryPresenter.OnInventoryRequested());
+            InventoryButton.Button.onClick.AddListener(() => inventoryPresenter.OnInventoryRequested());
         }
 
         public void PlayInventoryButtonParticle()
@@ -45,12 +46,9 @@ namespace MVP.Views
             InventoryCanvasGroup.DOKill();
             InventoryCanvasGroup.blocksRaycasts = true;
             DOTween.To(() => InventoryCanvasGroup.alpha, x => InventoryCanvasGroup.alpha = x, 1, 0.5f)
-                .OnComplete(() =>
-                {
-                    InventoryCanvasGroup.interactable = true;
-                });
+                .OnComplete(() => { InventoryCanvasGroup.interactable = true; });
         }
-        
+
         public void CloseInventoryPanel()
         {
             InventoryCanvasGroup.DOKill();
@@ -58,8 +56,5 @@ namespace MVP.Views
             InventoryCanvasGroup.blocksRaycasts = false;
             DOTween.To(() => InventoryCanvasGroup.alpha, x => InventoryCanvasGroup.alpha = x, 0, 0.5f);
         }
-
-        
-
     }
 }

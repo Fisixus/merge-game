@@ -1,11 +1,9 @@
 using System;
-using System.Text;
 using Cysharp.Threading.Tasks;
 using DI.Contexts;
 using MVP.Presenters;
 using MVP.Presenters.Handlers;
 using MVP.Views.Interface;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,13 +40,11 @@ namespace MVP.Views
                 });
             try
             {
-
             }
             catch (Exception e)
             {
                 throw new Exception();
             }
         }
-        
     }
 }

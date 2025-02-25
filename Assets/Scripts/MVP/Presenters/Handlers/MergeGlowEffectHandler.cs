@@ -14,7 +14,7 @@ namespace MVP.Presenters.Handlers
         {
             _mergeGlowEffectFactory = mergeGlowEffectFactory;
         }
-        
+
         public async UniTaskVoid PlayMergeGlowEffect(Vector3 worldPos, ColorType colorType)
         {
             MergeGlowParticle mergeGlowParticle = _mergeGlowEffectFactory.GenerateMergeGlowEffect(colorType);
@@ -22,7 +22,6 @@ namespace MVP.Presenters.Handlers
             var duration = mergeGlowParticle.Play();
             await UniTask.Delay(TimeSpan.FromSeconds(duration), DelayType.DeltaTime);
             _mergeGlowEffectFactory.DestroyObj(mergeGlowParticle);
-            
         }
     }
 }

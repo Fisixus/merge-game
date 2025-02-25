@@ -30,7 +30,7 @@ namespace MVP.Presenters
 
             // Unload the current scene
             var unloadOp = SceneManager.UnloadSceneAsync(currentSceneName);
-           
+
             if (unloadOp == null)
             {
                 //Debug.LogError($"UnloadSceneAsync({currentSceneName}) returned NULL! The scene may already be unloading.");

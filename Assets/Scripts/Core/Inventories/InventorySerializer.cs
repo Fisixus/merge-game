@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Core.GridSerialization;
@@ -8,8 +9,8 @@ namespace Core.Inventories
     public static class InventorySerializer
     {
         private static string SavePath => Path.Combine(Application.persistentDataPath, "inventory.json");
-    
-        
+
+
         //  Save inventory to JSON
         public static void SaveInventory(List<InventoryPawn> items)
         {
@@ -62,13 +63,13 @@ namespace Core.Inventories
                 InventoryPawn newPawn = new InventoryPawn(type, dataItem.level);
                 inventoryPawns.Add(newPawn);
             }
-            
+
             return inventoryPawns;
         }
     }
-    
+
     // ✅ Serializable wrapper for storing list of inventory items
-    [System.Serializable]
+    [Serializable]
     public class InventoryData
     {
         public List<InventoryPawnJson> Items;

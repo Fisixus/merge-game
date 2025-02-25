@@ -19,12 +19,8 @@ namespace Core.GridPawns.Effect
             else
             {
                 GlowEffect.transform.DOScale(0f, 0.15f)
-                    .OnComplete(() =>
-                    {
-                        GlowEffect.Stop();
-                    });
+                    .OnComplete(() => { GlowEffect.Stop(); });
             }
         }
-        
     }
 }

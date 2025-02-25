@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Core.GridPawns;
 using Core.GridSerialization;
 using UnityEngine;
@@ -18,7 +17,8 @@ namespace MVP.Models.Interface
         event Action<GridPawn> OnGridPawnInitialized;
         event Action<GridPawn, Vector2Int?, bool, float> OnGridPawnUpdated;
 
-        void UpdateGridPawn(GridPawn newGridPawn, bool isRemoving, Vector2Int? coordOverride = null, bool isAnimOn = false, float animTime = 0.3f);
+        void UpdateGridPawn(GridPawn newGridPawn, bool isRemoving, Vector2Int? coordOverride = null,
+            bool isAnimOn = false, float animTime = 0.3f);
 
         void SwapGridItems(GridPawn firstPawn, Vector2Int secondCoord);
     }

@@ -1,5 +1,4 @@
 using DI;
-using MVP.Presenters;
 using MVP.Presenters.Handlers;
 
 namespace Installers.MergeScene
@@ -11,7 +10,6 @@ namespace Installers.MergeScene
             Container.BindAsSingle(() => Container.Construct<GridPawnFactoryHandler>());
             Container.BindAsSingle(() => Container.Construct<DisappearEffectHandler>());
             Container.BindAsSingle(() => Container.Construct<MergeGlowEffectHandler>());
-            
         }
     }
 }

@@ -13,12 +13,11 @@ namespace Core.GridSerialization
         public static GridInfo SerializeToGridInfo()
         {
             if (!File.Exists(PersistentPath)) return null;
-            
+
             string jsonString = File.ReadAllText(PersistentPath);
             var gridJson = JsonUtility.FromJson<GridJson>(jsonString);
-            var (gridPawnTypes, gridPawnLevels, gridPawnCapacities) =  ProcessGridJson(gridJson);
+            var (gridPawnTypes, gridPawnLevels, gridPawnCapacities) = ProcessGridJson(gridJson);
             return new GridInfo(gridPawnTypes, gridPawnLevels, gridPawnCapacities);
-
         }
 
         public static void SaveGrid(GridPawn[,] grid)
@@ -32,7 +31,7 @@ namespace Core.GridSerialization
                 {
                     for (int j = 0; j < rowCount; j++)
                     {
-                        var type = grid[i, j] is null ? ApplianceType.None : grid[i, j].Type; 
+                        var type = grid[i, j] is null ? ApplianceType.None : grid[i, j].Type;
                         var level = grid[i, j] is null ? -1 : grid[i, j].Level;
                         var capacity = grid[i, j] is Producer producer ? producer.Capacity : -1;
                         JsonPawn pawn = new JsonPawn
@@ -56,10 +55,10 @@ namespace Core.GridSerialization
                 throw;
             }
         }
-        
-        public static (Enum[,] gridPawnTypes, int[,] gridPawnLevels, int[,] gridPawnCapacities) ProcessGridJson(GridJson gridJson)
+
+        public static (Enum[,] gridPawnTypes, int[,] gridPawnLevels, int[,] gridPawnCapacities) ProcessGridJson(
+            GridJson gridJson)
         {
-            
             var gridPawnTypes = new Enum[gridJson.grid_height, gridJson.grid_width];
             var gridPawnLevels = new int[gridJson.grid_height, gridJson.grid_width];
             var gridPawnCapacities = new int[gridJson.grid_height, gridJson.grid_width];
@@ -76,9 +75,8 @@ namespace Core.GridSerialization
 
             return (gridPawnTypes, gridPawnLevels, gridPawnCapacities);
         }
-        
-        
-        
+
+
         public static GridJson ConvertToGridJson(int gridWidth, int gridHeight, JsonPawn[,] pawns)
         {
             GridJson gridJson = new GridJson
@@ -96,18 +94,20 @@ namespace Core.GridSerialization
                     gridJson.grid[index] = pawns[x, y];
                 }
             }
+
             return gridJson;
         }
 
         public static JsonPawn[,] ConvertToJsonPawn(Enum[,] gridInfoGridPawnTypes, int[,] gridInfoGridPawnLevels)
         {
-            JsonPawn[,] jsonPawns = new JsonPawn[gridInfoGridPawnTypes.GetLength(0), gridInfoGridPawnTypes.GetLength(1)];
+            JsonPawn[,] jsonPawns =
+                new JsonPawn[gridInfoGridPawnTypes.GetLength(0), gridInfoGridPawnTypes.GetLength(1)];
             for (int i = 0; i < jsonPawns.GetLength(0); i++)
             for (int j = 0; j < jsonPawns.GetLength(1); j++)
             {
                 JsonPawn jsonPawn = new JsonPawn
                 {
-                    pawn_type = JsonEnumConverter.ConvertPawnTypeToJson(gridInfoGridPawnTypes[i,j]).ToString(),
+                    pawn_type = JsonEnumConverter.ConvertPawnTypeToJson(gridInfoGridPawnTypes[i, j]).ToString(),
                     level = gridInfoGridPawnLevels[i, j]
                 };
                 jsonPawns[i, j] = jsonPawn;

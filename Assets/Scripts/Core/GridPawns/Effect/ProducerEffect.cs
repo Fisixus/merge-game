@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -34,8 +33,5 @@ namespace Core.GridPawns.Effect
             _capacityScaleTween.Kill();
             CapacitySprite.transform.localScale = Vector3.one;
         }
-    
-    
-    
     }
 }

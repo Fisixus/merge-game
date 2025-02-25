@@ -8,9 +8,9 @@ namespace MVP.Views.Interface
 {
     public interface IInventoryView
     {
-        CanvasGroup InventoryCanvasGroup { get;  } 
-        InventoryButton InventoryButton { get;  }
-        Button InventoryCloseButton { get;  }
+        CanvasGroup InventoryCanvasGroup { get; }
+        InventoryButton InventoryButton { get; }
+        Button InventoryCloseButton { get; }
         Transform InventoryPawnUIsParentTr { get; }
         void PlayInventoryButtonParticle();
         void OpenInventoryPanel();

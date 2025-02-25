@@ -16,7 +16,7 @@ namespace Core.Factories
         {
             Pool = new ObjectPool<MergeGlowParticle>(ObjPrefab, ParentTr, 8);
         }
-        
+
         public MergeGlowParticle GenerateMergeGlowEffect(ColorType colorType)
         {
             var mergeGlowEffect = CreateObj();

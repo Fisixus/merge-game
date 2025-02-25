@@ -25,8 +25,9 @@ namespace MVP.Presenters
 
         private List<TaskUI> _activeTasks = new List<TaskUI>();
         private GridPawn[,] _grid;
-        
-        public TaskPresenter(IGridModel gridModel, DisappearEffectHandler disappearEffectHandler, GridPawnFactoryHandler gridPawnFactoryHandler, ITaskModel taskModel, 
+
+        public TaskPresenter(IGridModel gridModel, DisappearEffectHandler disappearEffectHandler,
+            GridPawnFactoryHandler gridPawnFactoryHandler, ITaskModel taskModel,
             ITaskUIFactory taskUIFactory)
         {
             _gridModel = gridModel;
@@ -45,16 +46,15 @@ namespace MVP.Presenters
             }
 
             UpdateTasks();
-            
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), DelayType.DeltaTime);
 
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), DelayType.DeltaTime);
         }
 
         public void UpdateGridAfterEditor()
         {
             _grid = _gridModel.Grid;
         }
-        
+
         public async UniTask CompleteTask(int taskID, List<Appliance> appliancesToDestroy)
         {
             var taskToComplete = _activeTasks.FirstOrDefault(task => task.TaskID == taskID);
@@ -80,7 +80,6 @@ namespace MVP.Presenters
             cg.blocksRaycasts = false;
             DOTween.To(() => cg.alpha, x => cg.alpha = x, 0, animDuration);
             await UniTask.Delay(TimeSpan.FromSeconds(animDuration), DelayType.DeltaTime);
-
         }
 
         private async UniTask AnimateNewTask(TaskUI newTask, float animDuration = 0.3f)
@@ -90,9 +89,8 @@ namespace MVP.Presenters
             cg.blocksRaycasts = true;
             DOTween.To(() => cg.alpha, x => cg.alpha = x, 1, animDuration);
             await UniTask.Delay(TimeSpan.FromSeconds(animDuration), DelayType.DeltaTime);
-
         }
-        
+
         private void HandleApplianceDestruction(GridPawn pawn)
         {
             _disappearEffectHandler.PlayDisappearEffect(pawn.transform.position, ColorType.Green).Forget();
@@ -100,7 +98,7 @@ namespace MVP.Presenters
             _gridModel.UpdateGridPawn(pawn, true);
             pawn.PawnEffect.SetFocus(false);
         }
-        
+
         private void DestroyAppliances(List<Appliance> appliancesToDestroy)
         {
             foreach (var appliance in appliancesToDestroy)
@@ -115,7 +113,7 @@ namespace MVP.Presenters
             if (taskInfo == null) return;
 
             var newTaskUI = _taskUIFactory.CreateObj();
-            
+
             newTaskUI.TaskID = taskInfo.TaskID;
             newTaskUI.CharImage.texture = taskInfo.CharTexture;
 
@@ -131,6 +129,7 @@ namespace MVP.Presenters
                     Debug.LogWarning($"Missing appliance data for {goal.ApplianceType} at level {goal.Level}");
                 }
             }
+
             newTaskUI.SubscribeDoneButton(this);
             _activeTasks.Add(newTaskUI);
             newTaskUI.CanvasGroup.alpha = 0f;
@@ -143,7 +142,8 @@ namespace MVP.Presenters
             {
                 foreach (var goalUI in taskUI.ActiveGoals)
                 {
-                    var goalPawn = GridPawnFinderHelper.FindGridPawn(_grid, goalUI.Goal.ApplianceType, goalUI.Goal.Level);
+                    var goalPawn =
+                        GridPawnFinderHelper.FindGridPawn(_grid, goalUI.Goal.ApplianceType, goalUI.Goal.Level);
                     taskUI.MatchGoal(goalUI, goalPawn);
                 }
             }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Core.Factories.Interface;
 using Core.GridPawns;
 using Core.GridPawns.Enum;
-using Core.Inventories;
 using UnityEngine;
 
 namespace MVP.Presenters.Handlers
@@ -18,8 +17,9 @@ namespace MVP.Presenters.Handlers
             _applianceFactory = applianceFactory;
             _producerFactory = producerFactory;
         }
-        
-        public void PopulateGridWithPawns(Enum[,] gridPawnTypes, int[,] gridPawnLevels, int[,] gridPawnCapacities, List<GridPawn> gridPawns)
+
+        public void PopulateGridWithPawns(Enum[,] gridPawnTypes, int[,] gridPawnLevels, int[,] gridPawnCapacities,
+            List<GridPawn> gridPawns)
         {
             // Process the grid with column-to-row traversal
             for (int i = 0; i < gridPawnTypes.GetLength(1); i++) // Columns
@@ -37,14 +37,14 @@ namespace MVP.Presenters.Handlers
                 }
             }
         }
-        
-        
+
+
         public void DestroyAllGridPawns()
         {
             _applianceFactory.DestroyAllAppliances();
             _producerFactory.DestroyAllProducers();
         }
-        
+
         public void DestroyPawn(GridPawn pawn)
         {
             switch (pawn)
@@ -87,11 +87,13 @@ namespace MVP.Presenters.Handlers
             Debug.LogWarning($"Unknown grid type: {pawn}");
             return null;
         }
+
         private Sprite LogUnknownTypeAndReturnNull(Enum e)
         {
             Debug.LogWarning($"Unknown grid type: {e}");
             return null;
         }
+
         public GridPawn CreateGridPawn(Enum pawnType, int level, Vector2Int coordinate, int capacity = -1)
         {
             switch (pawnType)
@@ -108,7 +110,8 @@ namespace MVP.Presenters.Handlers
 
         public Producer RecycleProducer(Producer producer, Vector2Int randomEmptyCoordinate)
         {
-            var newProducer = _producerFactory.GenerateProducer(producer.ProducerType, producer.Level, randomEmptyCoordinate);
+            var newProducer =
+                _producerFactory.GenerateProducer(producer.ProducerType, producer.Level, randomEmptyCoordinate);
             _producerFactory.DestroyObj(producer);
             return newProducer;
         }
@@ -126,15 +129,16 @@ namespace MVP.Presenters.Handlers
 
             return pawn1 switch
             {
-                Appliance appliance1 when pawn2 is Appliance appliance2 
+                Appliance appliance1 when pawn2 is Appliance appliance2
                     => MergeAppliances(appliance1, appliance2, newLevel, newCoordinate),
-                Producer producer1 when pawn2 is Producer producer2 
+                Producer producer1 when pawn2 is Producer producer2
                     => MergeProducers(producer1, producer2, newLevel, newCoordinate),
                 _ => HandleUnknownType(pawn1, newCoordinate)
             };
         }
 
-        private GridPawn MergeAppliances(Appliance appliance1, Appliance appliance2, int newLevel, Vector2Int coordinate)
+        private GridPawn MergeAppliances(Appliance appliance1, Appliance appliance2, int newLevel,
+            Vector2Int coordinate)
         {
             var newAppliance = _applianceFactory.GenerateAppliance(appliance1.ApplianceType, newLevel, coordinate);
             _applianceFactory.DestroyObj(appliance1);
@@ -149,13 +153,11 @@ namespace MVP.Presenters.Handlers
             _producerFactory.DestroyObj(producer2);
             return newProducer;
         }
-        
+
         private GridPawn HandleUnknownType(GridPawn pawn, Vector2Int coordinate)
         {
             Debug.LogWarning($"Unknown grid type: {pawn.Type} at {coordinate}");
             return null;
         }
-
-
     }
 }

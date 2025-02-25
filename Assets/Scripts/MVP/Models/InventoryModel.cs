@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Core.Inventories;
 using MVP.Models.Interface;
-using UnityEngine;
 
 namespace MVP.Models
 {
@@ -14,7 +13,6 @@ namespace MVP.Models
         public InventoryModel()
         {
             _pawns = InventorySerializer.LoadInventory();
-            
         }
 
         public void AddPawn(InventoryPawn pawn)
@@ -28,6 +26,5 @@ namespace MVP.Models
             _pawns.Remove(pawn);
             InventorySerializer.SaveInventory(_pawns); //  Auto-save after change
         }
-        
     }
 }

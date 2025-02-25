@@ -2,7 +2,6 @@ using DI;
 using MVP.Models;
 using MVP.Models.Interface;
 using MVP.Presenters;
-using MVP.Presenters.Handlers;
 using MVP.Views;
 using MVP.Views.Interface;
 using UnityEngine;
@@ -23,7 +22,7 @@ namespace Installers.MergeScene
             Container.BindAsSingle<IGridView>(() => _gridView);
             Container.BindAsSingle<IMergeUIView>(() => _mergeUIView);
             Container.BindAsSingle<IInventoryView>(() => _inventoryUIView);
-            
+
             Container.BindAsSingleNonLazy(() => Container.Construct<GridPresenter>());
             Container.BindAsSingleNonLazy(() => Container.Construct<TaskPresenter>());
             Container.BindAsSingleNonLazy(() => Container.Construct<InventoryPresenter>());
