@@ -13,7 +13,8 @@ namespace MVP.Models
 
         public InventoryModel()
         {
-            //TODO:_pawns = InventorySerializer.LoadInventory(); //  Load saved inventory
+            _pawns = InventorySerializer.LoadInventory();
+            
         }
 
         public void AddPawn(InventoryPawn pawn)
@@ -27,5 +28,6 @@ namespace MVP.Models
             _pawns.Remove(pawn);
             InventorySerializer.SaveInventory(_pawns); //  Auto-save after change
         }
+        
     }
 }

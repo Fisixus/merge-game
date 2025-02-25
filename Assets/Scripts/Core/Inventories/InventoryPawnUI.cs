@@ -28,7 +28,12 @@ namespace Core.Inventories
         public void FillData(GridPawn activePawn)
         {
             InventoryPawn = new InventoryPawn(activePawn.Type, activePawn.Level);
-            PawnButton.image.sprite = activePawn.SpriteRenderer.sprite;
+            SetPawnUISprite(activePawn.SpriteRenderer.sprite);
+        }
+
+        public void SetPawnUISprite(Sprite sprite)
+        {
+            PawnButton.image.sprite = sprite;
         }
 
         public void Shake(float duration = 0.05f)

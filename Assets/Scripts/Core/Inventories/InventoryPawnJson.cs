@@ -7,6 +7,6 @@ namespace Core.Inventories
     {
         public string id;  
         public string type;
-        public string level;
+        public int level;
     }
 }

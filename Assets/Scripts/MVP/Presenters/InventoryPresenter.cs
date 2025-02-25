@@ -39,8 +39,11 @@ namespace MVP.Presenters
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             
             _inventoryView.SubscribeInventoryButton(this);
-            //TODO:LOAD Inventory
-            
+            foreach (var inventoryPawn in _inventoryModel.Pawns)
+            {
+                AddPawnToInventory(inventoryPawn);//TODO:
+            }
+
         }
         private void OnSceneUnloaded(Scene scene)
         {
@@ -53,45 +56,64 @@ namespace MVP.Presenters
             UserInput.OnGridPawnReleased -= OnReleased;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
-
         public void OnPawnRequestedFromInventory(InventoryPawn inventoryPawn)
         {
-            var matchingUI = _inventoryView.InventoryPawnUIs
-                .FirstOrDefault(ui => ui.InventoryPawn.ID == inventoryPawn.ID);
-
-            if (matchingUI != null)
-            {
-                var randomCoordinate = GridPositionHelper.FindRandomEmptyCoordinate(_gridModel.Grid);
-                if (randomCoordinate == null)
-                {
-                    //No space in grid
-                    matchingUI.Shake();
-                    return;
-                }
-                
-                //TODO Play particle effect maybe
-                _inventoryPawnUIFactory.DestroyObj(matchingUI);
-                _inventoryView.InventoryPawnUIs.Remove(matchingUI);
-                //Save Inventory
-                //TODO:_inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn);
-                
-                var newPawn = _gridPawnFactoryHandler.CreateGridPawn(inventoryPawn.Type, inventoryPawn.Level, randomCoordinate.Value);
-                _gridModel.UpdateGridPawn(newPawn, false, null, true, 0.2f);
-                _taskPresenter.UpdateTasks();
-            }
-            else
+            var matchingUI = FindMatchingInventoryUI(inventoryPawn);
+            if (matchingUI == null)
             {
                 Debug.LogWarning($"No InventoryPawnUI found with ID: {inventoryPawn.ID}");
-            }        
+                return;
+            }
+
+            var randomCoordinate = GridPositionHelper.FindRandomEmptyCoordinate(_gridModel.Grid);
+            if (randomCoordinate == null)
+            {
+                HandleNoSpaceInGrid(matchingUI);
+                return;
+            }
+
+            ProcessPawnRequest(matchingUI, inventoryPawn, randomCoordinate.Value);
         }
+
+        // Find the matching UI element for the requested pawn
+        private InventoryPawnUI FindMatchingInventoryUI(InventoryPawn inventoryPawn)
+        {
+            return _inventoryView.InventoryPawnUIs
+                .FirstOrDefault(ui => ui.InventoryPawn.ID == inventoryPawn.ID);
+        }
+
+        // Handle case where there is no space in the grid
+        private void HandleNoSpaceInGrid(InventoryPawnUI matchingUI)
+        {
+            matchingUI.Shake(); // Indicate no space available
+        }
+
+        // Process moving the pawn from inventory to the grid
+        private void ProcessPawnRequest(InventoryPawnUI matchingUI, InventoryPawn inventoryPawn, Vector2Int coordinate)
+        {
+            PlayPawnRemoveFromInventoryEffect();
+
+            // Remove pawn from inventory
+            _inventoryPawnUIFactory.DestroyObj(matchingUI);
+            _inventoryView.InventoryPawnUIs.Remove(matchingUI);
+            _inventoryModel.RemovePawn(inventoryPawn);
+
+            // Create and place the pawn on the grid
+            var newPawn = _gridPawnFactoryHandler.CreateGridPawn(inventoryPawn.Type, inventoryPawn.Level, coordinate);
+            _gridModel.UpdateGridPawn(newPawn, false, null, true, 0.2f);
+
+            _taskPresenter.UpdateTasks();
+        }
+
+        private void PlayPawnRemoveFromInventoryEffect()
+        {
+            // TODO: Implement particle effect here
+        }
+
         
         public void OnInventoryRequested()
         {
-            if (_activePawn == null)
-            {
-                _inventoryView.OpenInventoryPanel();
-            }
-            
+            _inventoryView.OpenInventoryPanel();
         }
 
         private void OnTouched(GridPawn touchedGridPawn)
@@ -101,28 +123,52 @@ namespace MVP.Presenters
 
         private void OnReleased()
         {
-            if(_activePawn != null && _inventoryView.InventoryButton.IsEntered)
-            {
-                //TODO:Play particle effect 
-                
-                //Add Inventory
-                var newInventoryPawnUI = _inventoryPawnUIFactory.CreateObj();
-                newInventoryPawnUI.FillData(_activePawn);
-                newInventoryPawnUI.SubscribeToInventoryPawnUIClick(this);
-                _inventoryView.InventoryPawnUIs.Add(newInventoryPawnUI);
-                //Save Inventory
-                //TODO:_inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn);
-                
-                //Destroy from grid
-                _gridPawnFactoryHandler.DestroyPawn(_activePawn);
-                _gridModel.UpdateGridPawn(_activePawn, true);
-                _activePawn.PawnEffect.SetFocus(false);
-                _taskPresenter.UpdateTasks();
+            if (_activePawn == null || !_inventoryView.InventoryButton.IsEntered) return;
 
-               
-                
-                _activePawn = null;
-            }
+            PlayReleaseEffects();
+            AddPawnToInventory();
+            RemovePawnFromGrid();
+    
+            _taskPresenter.UpdateTasks();
+            _activePawn = null;
         }
+
+        private void PlayReleaseEffects()
+        {
+            // TODO: Implement particle effect here
+        }
+
+        //  Create and add pawn to inventory
+        private void AddPawnToInventory()
+        {
+            var newInventoryPawnUI = _inventoryPawnUIFactory.CreateObj();
+            newInventoryPawnUI.FillData(_activePawn);
+            newInventoryPawnUI.SubscribeToInventoryPawnUIClick(this);
+            _inventoryView.InventoryPawnUIs.Add(newInventoryPawnUI);
+
+            _inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn); //  Save to inventory
+        }
+        
+        private void AddPawnToInventory(InventoryPawn inventoryPawn)
+        {
+            var newInventoryPawnUI = _inventoryPawnUIFactory.CreateObj();
+            newInventoryPawnUI.InventoryPawn = inventoryPawn;
+            
+            newInventoryPawnUI.SetPawnUISprite(_gridPawnFactoryHandler.GetSprite(inventoryPawn.Type, inventoryPawn.Level));
+            
+            newInventoryPawnUI.SubscribeToInventoryPawnUIClick(this);
+            _inventoryView.InventoryPawnUIs.Add(newInventoryPawnUI);
+
+            //_inventoryModel.AddPawn(newInventoryPawnUI.InventoryPawn); //  Save to inventory
+        }
+
+        //  Remove the pawn from the grid
+        private void RemovePawnFromGrid()
+        {
+            _gridPawnFactoryHandler.DestroyPawn(_activePawn);
+            _gridModel.UpdateGridPawn(_activePawn, true);
+            _activePawn.PawnEffect.SetFocus(false);
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Core.GridSerialization;
 using UnityEngine;
 
 namespace Core.Inventories
@@ -20,7 +21,21 @@ namespace Core.Inventories
 
         private static List<InventoryPawnJson> ConvertToInventoryJson(List<InventoryPawn> items)
         {
-            throw new System.NotImplementedException();
+            List<InventoryPawnJson> jsonPawns = new List<InventoryPawnJson>(items.Count);
+            foreach (var inventoryPawn in items)
+            {
+                //Debug.Log(inventoryPawn);
+                var stringType = JsonEnumConverter.ConvertPawnTypeToJson(inventoryPawn.Type);
+                InventoryPawnJson jsonPawn = new InventoryPawnJson
+                {
+                    id = inventoryPawn.ID,
+                    level = inventoryPawn.Level,
+                    type = stringType.ToString()
+                };
+                jsonPawns.Add(jsonPawn);
+            }
+
+            return jsonPawns;
         }
 
         //  Load inventory from JSON
@@ -40,7 +55,15 @@ namespace Core.Inventories
 
         private static List<InventoryPawn> ConvertToInventoryPawn(List<InventoryPawnJson> inventoryDataItems)
         {
-            throw new System.NotImplementedException();
+            List<InventoryPawn> inventoryPawns = new List<InventoryPawn>(inventoryDataItems.Count);
+            foreach (var dataItem in inventoryDataItems)
+            {
+                var type = JsonEnumConverter.ConvertJsonToPawnType(dataItem.type);
+                InventoryPawn newPawn = new InventoryPawn(type, dataItem.level);
+                inventoryPawns.Add(newPawn);
+            }
+            
+            return inventoryPawns;
         }
     }
     
