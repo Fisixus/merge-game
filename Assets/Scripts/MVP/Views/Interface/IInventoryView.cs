@@ -12,9 +12,9 @@ namespace MVP.Views.Interface
         InventoryButton InventoryButton { get;  }
         Button InventoryCloseButton { get;  }
         Transform InventoryPawnUIsParentTr { get; }
+        void PlayInventoryButtonParticle();
         void OpenInventoryPanel();
         void SubscribeInventoryButton(InventoryPresenter inventoryPresenter);
-        
         List<InventoryPawnUI> InventoryPawnUIs { get; }
     }
 }

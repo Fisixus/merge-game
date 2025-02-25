@@ -135,7 +135,7 @@ namespace MVP.Presenters
 
         private void PlayReleaseEffects()
         {
-            // TODO: Implement particle effect here
+            _inventoryView.PlayInventoryButtonParticle();
         }
 
         //  Create and add pawn to inventory

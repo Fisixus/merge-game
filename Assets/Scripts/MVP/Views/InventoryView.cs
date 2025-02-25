@@ -10,7 +10,7 @@ namespace MVP.Views
 {
     public class InventoryView : MonoBehaviour, IInventoryView
     {
-        
+        [field: SerializeField]public ParticleSystem InventoryButtonParticle { get; private set; } 
         [field: SerializeField]public CanvasGroup InventoryCanvasGroup { get; private set; } 
         [field: SerializeField]public InventoryButton InventoryButton { get; private set; }
         [field: SerializeField]public Button InventoryCloseButton { get; private set; }
@@ -32,6 +32,12 @@ namespace MVP.Views
         public void SubscribeInventoryButton(InventoryPresenter inventoryPresenter)
         {
             InventoryButton.Button.onClick.AddListener(()=> inventoryPresenter.OnInventoryRequested());
+        }
+
+        public void PlayInventoryButtonParticle()
+        {
+            if (InventoryButtonParticle.isPlaying) return;
+            InventoryButtonParticle.Play();
         }
 
         public void OpenInventoryPanel()

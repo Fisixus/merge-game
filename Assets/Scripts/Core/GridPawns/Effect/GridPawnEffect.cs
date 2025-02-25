@@ -47,7 +47,9 @@ namespace Core.GridPawns.Effect
         public void Shift(Vector3 position, Action a, float animTime=0.3f)
         {
             _shiftTween?.Kill(); // Ensure only one tween sequence is active
-            _shiftTween = transform.DOMove(position, animTime).SetEase(Ease.OutQuad).OnComplete(a.Invoke);
+            _shiftTween = transform.DOMove(position, animTime).SetEase(Ease.OutQuad)
+                .OnComplete(a.Invoke)
+                .OnKill(a.Invoke);
         }
         
     }
