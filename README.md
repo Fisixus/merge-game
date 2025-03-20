@@ -1,4 +1,4 @@
-# 🧩 Merge Game (Travel Town-Inspired)
+# Merge Game 🧩 
 
 A **merge-based puzzle game** built in Unity using C#. Players merge items to create higher-level objects and complete tasks. The game features an **inventory system, level-based progression, and producer mechanics**.
 
