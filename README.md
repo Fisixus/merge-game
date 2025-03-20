@@ -2,11 +2,12 @@
 
 A **merge-based puzzle game** built in Unity using C#. Players merge items to create higher-level objects and complete tasks. The game features an **inventory system, level-based progression, and producer mechanics**.
 
+[![Watch the video](https://img.youtube.com/vi/UhQjHvKQyCU?feature=share/0.jpg)](https://youtube.com/shorts/UhQjHvKQyCU?feature=share)
 ---
 
 ## 📖 About the Project
 
-This project was developed as a **case study** and is not intended for commercial use. It replicates the core mechanics of **Travel Town-style** merging games while implementing **clean code architecture** and efficient **design patterns**.
+This project is not intended for commercial use. It replicates the core mechanics of **Travel Town-style** merging games while implementing **clean code architecture** and efficient **design patterns**.
 
 ---
 
